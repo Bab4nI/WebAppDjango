@@ -1,9 +1,11 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
     <title>Система инвентаризации</title>
@@ -38,7 +40,7 @@
                     <p class="intro_down_text">Для получения дополнительной информации, прокрутите страницу вниз.</p>  
                 </div>
                 <div class="intro_image img">
-                    <img src="assets/images/checklist_3318615.png" alt="checklist_image">
+                    <img src="{% static 'images/checklist_3318615.png' %}" alt="checklist_image">
                 </div>
             </div>
         </div>
@@ -80,21 +82,88 @@
         </div>
     </div>
 
-    <br><br><br><br><br>
+
+    <br><br><br>
+    
+    
+    <div class="container">
+        <div class="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{% static 'images/dbh1.jpg' %}" alt="image 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'images/dbh2.jpg' %}" alt="image 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'images/dbh3.jpg' %}" alt="image 3">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'images/dbh4.jpg' %}" alt="image 4">
+                </div>
+            </div>
+        
+            <a class="carousel-control prev" onclick="prevSlide()">&#10094;</a>
+            <a class="carousel-control next" onclick="nextSlide()">&#10095;</a>
+        
+            <div class="carousel-dots">
+                <span class="dot" onclick="setSlide(0)"></span>
+                <span class="dot" onclick="setSlide(1)"></span>
+                <span class="dot" onclick="setSlide(2)"></span>
+                <span class="dot" onclick="setSlide(3)"></span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{% static 'js/script.js' %}"></script>
+    
+    
+    <br><br>
+
 
     <div class="container">
         <div class="colomn_grid">
+
             <div class="review_block">
-                <p>hi</p>
-                <div class="review_image">
-                    <img src="assets/images/3e8694da635f02813dac39ee59e0b464.jpg" alt="sup">
+                <div class="review_header">
+                    <div class="review_image"> 
+                        <img src="{% static 'images/pjonkins.jpg' %}" alt="PAPa">
+                    </div>
+                    <div class="review_info">
+                        <p>Антон Павлович П.</p>
+                    </div>
+                </div>
+                <div class="review_footer">
+                    <p> 12 студентов из 10, держите свой миллион за студенческий стартап. заберите в и-223 </p>
                 </div>
             </div>
+
             <div class="review_block">
-                <p>hi</p>
+                <div class="review_header">
+                    <div class="review_image"> 
+                        <img src="{% static 'images/gpt.png' %}" alt="chat<3">
+                    </div>
+                    <div class="review_info">
+                        <p>Чятик GPT</p>
+                    </div>
+                </div>
+                <div class="review_footer">
+                    <p> Система инвентаризации — просто находка! <br>Всё чётко, ясно, нет ни малейшей плутовки. <br>В учёте полный порядок и ноль суеты, <br>Теперь всё под контролем, как и должно быть!</p>
+                </div>
             </div>
+
             <div class="review_block">
-                <p>hi</p>
+                <div class="review_header">
+                    <div class="review_image"> 
+                        <img src="{% static 'images/dAj4YzBrUU0.jpg' %}" alt="okey..">
+                    </div>
+                    <div class="review_info">
+                        <p>Эксперт</p>
+                    </div>
+                </div>
+                <div class="review_footer">
+                    <p> вы обязательно защитите проект </p>
+                </div>
             </div>
         </div>
     </div>
@@ -104,6 +173,10 @@
             <div class="app_text">
                 <p>Также у нас есть приложение, с помощью которого вы сможете фиксировать перемещение инвентаря между помещениями или складами. Оно поможет быстро провести  в вашей компании инвентаризацию, а также автоматически составит отчёт о проведённой работе.</p>
             </div> 
+            <div class="app_image">
+                <img src="{% static 'images/НовыйХолст1.png' %}" alt="">
+            </div>
+            
         </div>
         <a class="app_link" href="page2.html">Ссылка на приложение</a>
     </div>
