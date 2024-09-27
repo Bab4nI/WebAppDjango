@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['127.0.0.1', '10.0.2.2', '192.168.0.101']
 
 INSTALLED_APPS = [
     'rest_framework',
+    'rest_framework_simplejwt',
     'Users.apps.UsersConfig',
     'StoreHouse.apps.StorehouseConfig',
     'django.contrib.admin',
@@ -43,6 +44,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
