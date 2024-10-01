@@ -3,45 +3,43 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import User
 
 class LoginForm(forms.Form):
-    username = forms.CharField(
-        widget= forms.TextInput(
+    username = forms.CharField(widget= forms.TextInput(
             attrs={
-                "class": "form-control"
+                "class": "form-control",
+                "required": True
             }
         )
     )
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "class": "form-control"
+                "class": "form-control",
+                "required": True
             }
         )
     )
 
 
 class SignUpForm(UserCreationForm):
-    username = forms.CharField(
+    name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "class": "form-control"
+                "class": "form-control",
+                "required": True
             }
         )
     )
-    password1 = forms.CharField(
-        widget=forms.PasswordInput(
+
+    surname = forms.CharField(
+        widget=forms.TextInput(
             attrs={
-                "class": "form-control"
+                "class": "form-control",
+                "required": True
             }
         )
     )
-    password2 = forms.CharField(
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control"
-            }
-        )
-    )
-    email = forms.CharField(
+
+    patronymic = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 "class": "form-control"
@@ -49,6 +47,48 @@ class SignUpForm(UserCreationForm):
         )
     )
 
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "required": True
+            }
+        )
+    )
+
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "required": True
+            }
+        )
+    )
+
+    email = forms.CharField(
+        widget=forms.EmailInput(
+            attrs={
+                "class": "form-control",
+                "required": True
+            }
+        )
+    )
+
+    ROLE_CHOICES = [
+        ('admin', 'Администратор'),
+        ('employee', 'Сотрудник'),
+    ]
+
+    role = forms.ChoiceField(
+        choices=ROLE_CHOICES,
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "required": True
+            }
+        )
+    )
+
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2', 'is_admin', 'is_employee', 'is_staff')
+        fields = ('surname', 'name', 'patronymic', 'password1', 'password2', 'email', 'is_admin', 'is_employee')

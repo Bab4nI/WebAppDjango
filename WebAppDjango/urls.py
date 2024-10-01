@@ -6,5 +6,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name = 'index'),
     path('accounts/', include('AuthReg.urls')),
-    path('stock/', include(('StoreHouse.urls', 'StoreHouse'), namespace='StoreHouse'))
+    path('stock/', include(('StoreHouse.urls', 'StoreHouse'), namespace='StoreHouse')),
+    path('page2/', views.page2, name='page2'),
 ]
