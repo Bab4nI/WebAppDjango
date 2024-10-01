@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'assets/css/style2.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <title>Регистрация</title>
+</head>
+<body>
+    <div class="header_base">
+        <header class="header">
+            <div class="container">
+                <div class="header_inner">
+                    <div class="header_logo">{Craft~Code}</div>
+                    
+                    <nav class="nav">
+                        <a class="nav_link" href="index.html">О нас</a>
+                        <a class="nav_link" href="page2.html">Карта помещений</a>
+                        <a class="nav_link" href="registr.html">Инвентарь</a>
+                        <a class="nav_link" href="page2.html">Связь с поддержкой</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+    
+    <div class="line">
+        <div class="container">
+            <p>Регистрация</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="text_reg">
+            <p>На указанный Вами адрес электронной почты было направлено письмо с ссылкой для подтверждения регистрации. Пожалуйста, пройдите по ссылке </p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="img_reg">
+            <img class="img_reg" src="{% static '/assets/images/80-800423_mail.png' %}" alt="envelope">
+        </div>
+    </div>
+
+    <div class="contacts_line">
+        <div class="contacts_block">
+            <p>craftcode@sfedu.ru</p>
+            <p>+7-(9**)-***-**-**</p>
+        </div>
+    </div>
+
+    <script src="{% static 'script2.js' %}"> </script>
+</body>
+</html>

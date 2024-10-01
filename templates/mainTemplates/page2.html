@@ -1,9 +1,11 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/style2.css">
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
     <title>Регистрация</title>
@@ -39,7 +41,7 @@
                 
                 <div class="photo-upload">
                     <label for="photo">
-                        <img src="/assets/images/profile_pic.png" alt="Фото профиля" id="profilePhoto" class="profile-photo">
+                        <img src="{% static '/assets/images/profile_pic.png' %}" alt="Фото профиля" id="profilePhoto" class="profile-photo">
                     </label>
                     <input type="file" id="photo" name="photo" accept="image/*" onchange="loadFile(event)">
                 </div>
@@ -101,6 +103,6 @@
         </div>
     </div>
 
-    <script src="script2.js"> </script>
+    <script src="{% static 'script2.js' %}"> </script>
 </body>
 </html>
