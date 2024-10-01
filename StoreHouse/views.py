@@ -1,13 +1,6 @@
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .forms import WarehouseForm, ItemForm
 from .models import Warehouse, Item
-from django.urls import reverse
-from django.contrib.auth import decorators
-
-@decorators.login_required
-def profile(request):
-    return render(request, 'StoreHouse/profile.html')
 
 def warehouse_list(request):
     warehouses = Warehouse.objects.all()
