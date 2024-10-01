@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .forms import WarehouseForm, ItemForm
 from .models import Warehouse, Item
