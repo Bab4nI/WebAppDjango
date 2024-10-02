@@ -5,7 +5,6 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name = 'index'),
-    path('accounts/', include('AuthReg.urls')),
+    path('accounts/', include(('AuthReg.urls', 'AuthReg'), namespace = 'AuthReg')),
     path('stock/', include(('StoreHouse.urls', 'StoreHouse'), namespace='StoreHouse')),
-    path('page2/', views.page2, name='page2'),
 ]
