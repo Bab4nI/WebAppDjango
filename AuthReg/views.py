@@ -12,9 +12,9 @@ def register(request):
         if form.is_valid():
             form.save()
             msg = 'user created'
-            return redirect('login_view')
+            return redirect('AuthReg:login_view')
         else:
-            msg = 'form is not valid'
+            print(form.errors)
     else:
         form = SignUpForm()
     return render(request,'AuthReg/page2.html', {'form': form, 'msg': msg})
@@ -29,13 +29,13 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None and user.is_admin:
                 login(request, user)
-                return redirect('adminpage')
+                return redirect('AuthReg:adminpage')
             elif user is not None and user.is_customer:
                 login(request, user)
-                return redirect('customer')
+                return redirect('AuthReg:customer')
             elif user is not None and user.is_employee:
                 login(request, user)
-                return redirect('employee')
+                return redirect('AuthReg:employee')
             else:
                 msg= 'invalid credentials'
         else:
