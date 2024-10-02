@@ -1,9 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from WebAppDjango.managers import UserManager
+from StoreHouse.models import Company
 
 class User(AbstractUser):
    username = None
+
+   company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='employees')
+   is_company_admin = models.BooleanField(default=False)
 
    is_admin = models.BooleanField('Is admin', default=False)
    is_employee = models.BooleanField('Is employee', default=False)

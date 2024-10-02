@@ -29,10 +29,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None and user.is_admin:
                 login(request, user)
-                return redirect('AuthReg:adminpage')
-            elif user is not None and user.is_customer:
-                login(request, user)
-                return redirect('AuthReg:customer')
+                return redirect('AuthReg:admin')
             elif user is not None and user.is_employee:
                 login(request, user)
                 return redirect('AuthReg:employee')
@@ -44,9 +41,6 @@ def login_view(request):
 
 def admin(request):
     return render(request,'admin.html')
-
-def customer(request):
-    return render(request,'customer.html')
 
 def employee(request):
     return render(request,'employee.html')
