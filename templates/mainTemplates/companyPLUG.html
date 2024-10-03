@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ company.name }} - Dashboard</title>
+</head>
+<body>
+    <h1>{{ company.name }} - Управление</h1>
+
+    <h2>Сотрудники</h2>
+    <ul>
+        {% for employee in employees %}
+            <li>{{ employee.username }} ({{ employee.role }})</li>
+        {% empty %}
+            <li>Сотрудников нет.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Склады</h2>
+    <ul>
+        {% for warehouse in warehouses %}
+            <li>{{ warehouse.name }} (Заполненность: {{ warehouse.fullness }}%)</li>
+        {% empty %}
+            <li>Складов нет.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
