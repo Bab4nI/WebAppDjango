@@ -27,12 +27,16 @@ SECRET_KEY = 'django-insecure-tbj9qzsn!3_lolp3s05vgtv*sq8ia&5s_gmof@d3h5bnt24dpp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '10.0.2.2', '192.168.0.104', '192.168.0.105', '192.168.0.100',
+                 '10.131.57.168', '10.131.56.37', '192.168.43.197']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'Users.apps.UsersConfig',
     'StoreHouse.apps.StorehouseConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,6 +45,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,6 +96,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'OPTIONS': {
+            'timeout': 20,  # Увеличьте тайм-аут до 20 секунд
+        }
     }
 }
 
