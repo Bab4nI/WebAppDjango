@@ -27,13 +27,14 @@ SECRET_KEY = 'django-insecure-tbj9qzsn!3_lolp3s05vgtv*sq8ia&5s_gmof@d3h5bnt24dpp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '10.0.2.2', '192.168.0.104', '192.168.0.105', '192.168.0.100',
+ALLOWED_HOSTS = ['127.0.0.1', '10.0.2.2', '192.168.0.104', '192.168.0.105', '192.168.0.101',
                  '10.131.57.168', '10.131.56.37', '192.168.43.197']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'InventoryRequests',
     'rest_framework',
     'rest_framework_simplejwt',
     'Users.apps.UsersConfig',

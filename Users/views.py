@@ -1,4 +1,6 @@
 from django.contrib.auth import authenticate, login
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -14,10 +16,10 @@ class UserRegistration(APIView):
             return Response({'message': 'Пользователь успешно зарегистрирован'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class UserLoginAPI(APIView):
     def post(self, request):
-        username = request.data.get('username')
+        username = request.data.get('email')
         password = request.data.get('password')
 
         user = authenticate(username=username, password=password)
