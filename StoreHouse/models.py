@@ -8,12 +8,18 @@ class Company(models.Model):
 
 class Warehouse(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='warehouses')
+    parent_warehouse = models.ForeignKey('self', on_delete=models.CASCADE, related_name='warehouses', null = True, blank = True)
     name = models.CharField(max_length=200)
     fullness = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
     
+    @property
+    def is_root(self):
+        """Проверка, является ли склад корневым"""
+        return self.parent_warehouse is None
+        
 class Item(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='items')
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='items')
