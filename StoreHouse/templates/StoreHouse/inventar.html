@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/style4.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <title>Личный кабинет</title>
+</head>
+<body>
+    <div class="header_base">
+        <header class="header">
+            <div class="container">
+                <div class="header_inner">
+
+                    <div class="header_box">
+                        <div class="header_acc_photo">
+                            <img src="/assets/images/profile_pic.png" alt="user_img">    
+                        </div>
+                        <p>user_name</p>
+                    </div>
+                    
+                    <nav class="nav">
+                        <a class="nav_link" href="index.html">О нас</a>
+                        <a class="nav_link" href="account.html">Личный кабинет</a>
+                        <a class="nav_link" href="inventar.html">Инвентарь</a>
+                        <a class="nav_link" href="support.html">Связь с поддержкой</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+    
+    <table>
+        <thead>
+            <th>№</th>
+            <th>QR-код</th>
+            <th>Наименование товара</th>
+            <th>Местонахождение</th>
+            <th>Ответственное лицо</th>
+        </thead>
+        <tbody>
+            {% for warehouses in warehouses %}
+                <tr>
+                    <td>{{ .identification-number }}</td>
+                    <td>{{ .qr-code }}</td>
+                    <td>{{ .product-name }}</td>
+                    <td>{{ .location }}</td>
+                    <td>{{ .responsible-employee }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No products found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

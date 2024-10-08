@@ -4,10 +4,10 @@ from . import views
 app_name = 'AuthReg'
 urlpatterns = [
     path('', views.index, name = 'index'),
-    path('page2/', views.register, name = 'page2'),
     path('login/', views.login, name='login'),
-    path('invite/', views.create_invitation, name = 'invite'),
-    path('adminpage/', views.admin, name='adminpage'),
-    path('employee/', views.employee, name='employee'),
-    path('register/<uuid:token>/', views.register_by_invitation, name = 'register'),
+    #path('invite/', views.create_invitation, name = 'invite'),
+    path('registration/<uuid:token>/', views.register_by_invitation, name = 'registration'),
+    path('authorisation/', views.authorisation, name = 'authorisation'),
+    path('account/', views.account, name = 'account'),
+    path('inventory/', views.inventory, name = 'inventory'),
 ]

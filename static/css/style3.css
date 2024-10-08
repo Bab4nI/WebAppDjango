@@ -53,8 +53,9 @@ h1,h2,h3,h4,h5,h6 {
 /* Grids */
 .colomn_grid {
     display: flex;
-    align-items: start;
-    justify-content: space-between;
+    align-items:flex-start; 
+    justify-content: flex-start; 
+    gap: 100px;
     padding: 40px 20px;
 
 }
@@ -69,7 +70,7 @@ h1,h2,h3,h4,h5,h6 {
 
 /* Header */
 .header {
-    padding-top: 30px;
+    padding-top: 20px;
     padding-bottom: 30px;
     width: 100%;
     position: absolute;
@@ -150,12 +151,13 @@ h1,h2,h3,h4,h5,h6 {
 
 /* Contacts */
 .contacts_line {
-    margin: 30px 0 0 0;
+    margin: 0;
     background-color: #ca4ad3;
     height: 100px;
 
     font-size: 20px;
     color: #ede4ec;
+
 }
 
 .contacts_block {
@@ -173,13 +175,51 @@ h1,h2,h3,h4,h5,h6 {
     align-items: center;
 }
 
+/* Sidebar */
+.main-content {
+    display: flex;
+}
+
+.sidebar {
+    width: 20%;
+    background-color: #efdcf2;
+    padding: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 0px;
+    text-align:left;
+}
+
+.sidebar li:hover {
+    background-color: #dab6e4;
+}
+
+.content {
+    width: 80%;
+    padding: 40px;
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+}
+
+
 /* Authorisation info */
 .profile-photo {
     width: 250px;
     height: auto;
     border-radius: 0%;
-    
-    cursor: pointer;
 }
 
 .form-group {
@@ -206,54 +246,3 @@ input[type="file"] {
     display: none;
 }
 
-input.invalid {
-    border-color: red;
-}
-
-input.valid {
-    border-color: green;
-}
-
-button {
-    background-color: #6c3483;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: #5a2d6f;
-}
-
-/* Registration */
-.text_reg {
-    font-weight: 700;
-    font-size: 17px;
-    margin-top: 100px;
-    margin-bottom: 150px;
-    text-align: center;
-    align-items: center;
-}
-
-.img_reg {
-    text-align: center;
-    margin-bottom: 75px;
-}
-
-.img_reg img {
-    max-width: 100%;
-    width: 150px;
-    height: auto;
-}
-
-/* Authorisation */
-.autho {
-    display: flex;
-    align-items: center; 
-    justify-content: center; 
-    height: 70vh; 
-    
-}

@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/style1.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
     <title>Система инвентаризации</title>
@@ -18,9 +18,9 @@
                 
                 <nav class="nav">
                     <a class="nav_link" href="{% url 'index' %}">О нас</a>
-                    <a class="nav_link" href="{% url 'AuthReg:page2' %}">Карта помещений</a>
-                    <a class="nav_link" href="{% url 'company' %}">Инвентарь</a>
-                    <a class="nav_link" href="{% url 'index' %}">Связь с поддержкой</a>
+                    <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
+                    <a class="nav_link" href="{% url 'AuthReg:authorisation' %}">Инвентарь</a>
+                    <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
                 </nav>
             </div>
         </div>
@@ -33,14 +33,14 @@
                     <p>Если в Вашей компании существуют трудности в проведении инвентаризации или Вы ищите более удобный сервис для этих целей, то наш сайт точно для вас.</p>
                     <p>Нажмите кнопку ниже, чтобы зарегистрироваться и начать пользоваться нашим сервисом.</p>
     
-                    <a class="button_link" href="page2.html">
+                    <a class="button_link" href="{% url 'AuthReg:authorisation' %}">
                         <button class="button">Начать сейчас</button>
                     </a>
                     
                     <p class="intro_down_text">Для получения дополнительной информации, прокрутите страницу вниз.</p>  
                 </div>
                 <div class="intro_image img">
-                    <img src="{% static 'images/checklist_3318615.png' %}" alt="checklist_image">
+                    <img src="{%  static 'images/checklist_3318615.png' %}" alt="checklist_image">
                 </div>
             </div>
         </div>
@@ -178,7 +178,7 @@
             </div>
             
         </div>
-        <a class="app_link" href="page2.html">Ссылка на приложение</a>
+        <a class="app_link" href="{% url 'app_link' %}">Ссылка на приложение</a>
     </div>
 
     <div class="contacts_line">

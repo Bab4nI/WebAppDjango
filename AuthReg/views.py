@@ -8,19 +8,19 @@ from django.urls import reverse
 def index(request):
     return render(request, 'mainTempaltes/index.html')
 
-def register(request):
+def registration(request):
     msg = None
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
             msg = 'user created'
-            return redirect('AuthReg:login_view')
+            return redirect('AuthReg:login')
         else:
             print(form.errors)
     else:
         form = SignUpForm()
-    return render(request,'AuthReg/page2.html', {'form': form, 'msg': msg})
+    return render(request,'AuthReg/registration.html', {'form': form, 'msg': msg})
 
 def login(request):
     form = LoginForm(request.POST or None)
@@ -33,19 +33,13 @@ def login(request):
             
             if user is not None:
                 auth_login(request, user)
-                return redirect(reverse('mainTempaltes:index'))
+                return redirect(reverse('AuthReg/account.html'))
             else:
                 msg = 'Invalid credentials. Please try again.'
         else:
             msg = 'error validating form'
 
     return render(request, 'AuthReg/login.html', {'form': form, 'msg': msg})
-
-def admin(request):
-    return render(request,'admin.html')
-
-def employee(request):
-    return render(request,'employee.html')
 
 def create_invitation(request):
     if request.method == 'POST':
@@ -98,3 +92,35 @@ def register_by_invitation(request, token):
 
     return render(request, 'register_by_invitation.html', {'invitation': invitation})
 
+def authorisation(request):
+    render(request, 'AuthReg/authorisation.html')
+
+def account(request):
+    if request.user.is_authenticated:
+        user = request.user
+        company = user.company
+        if company:
+            employees = company.employees.all()
+            warehouses = company.warehouses.all()
+            items = company.items.all()
+            context = {
+                'company': company,
+                'employees': employees,
+                'warehouses': warehouses,
+                'items': items,
+            }
+        else:
+            context = {
+                'company': None,
+                'employees': [],
+                'warehouses': [],
+                'items': [],
+            }
+
+        return render(request, 'AuthReg/account.html', context)
+
+    else:
+        return redirect('AuthReg:login')
+     
+def inventory (request):
+    return render(request, 'AuthReg/inventar')

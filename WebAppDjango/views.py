@@ -12,3 +12,9 @@ def company(request):
         return render(request, 'mainTemplates/companyPLUG.html')
     else:
         return redirect(reverse('AuthReg:login'))
+
+def support(request):
+    return render('mainTemplates/support.html')
+
+def app_link(request):
+    return render('mainTemplates/app_link.html')
