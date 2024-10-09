@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import SignUpForm, LoginForm
+from .forms import *
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login as auth_login, get_user_model
 from .models import Invitation
@@ -26,29 +26,32 @@ def registration(request):
     return render(request,'AuthReg/registration.html', {'form': form, 'msg': msg})
 
 def create_invitation(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        role = request.POST.get('email')
-        company = request.user.company
+    if request.method == 'POST':   
+        form = InviteForm(data = request.POST)
+        if form.is_valid():  
+            email = form.cleaned_data['email']
+            role = form.cleaned_data['role']
+            company = request.user.company
 
-        invitation = Invitation.objects.create(
-            company = company,
-            role = role,
-            email = email
-        )
+            invitation = Invitation.objects.create(
+                company = company,
+                role = role,
+                email = email
+            )
 
-        invitation_link = request.build_absolute_urri(reverse('registered_by_invitation', args = [invitation.token]))
+            invitation_link = request.build_absolute_urri(reverse('register_by_invitation', args = [invitation.token]))
 
-        send_mail(
-            'Приглашение на регистрацию',
-            f'Пройдите по следующей ссылке для регистрации: {invitation_link}',
-            'noreply@yourdomain.com',
-            [email],
-        )
+            send_mail(
+                'Приглашение на регистрацию',
+                f'Пройдите по следующей ссылке для регистрации: {invitation_link}',
+                'noreply@mail.ru',
+                [email],
+            )
 
-        return redirect('dashboard')
-    
-    return render(request, 'invitation.html')
+            return redirect(reverse(index))
+    else:
+        form = InviteForm()
+    return render(request, 'AuthReg/invitationPLUG.html', {'form': form})
     
 def register_by_invitation(request, token):
     User = get_user_model()

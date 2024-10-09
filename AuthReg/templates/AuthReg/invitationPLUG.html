@@ -1,0 +1,84 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <title>Приглашение</title>
+</head>
+<body>
+    <div class="header_base">
+        <header class="header">
+            <div class="container">
+                <div class="header_inner">
+                    <div class="header_logo">{Craft~Code}</div>
+                    
+                    <nav class="nav">
+                        <a class="nav_link" href="{% url 'index' %}">О нас</a>
+                        <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
+                        <a class="nav_link" href="{% url 'StoreHouse:inventory' %}">Инвентарь</a>
+                        <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+    
+    <div class="line">
+        <div class="container">
+            <p>Приглашение</p>
+        </div>
+    </div>
+
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for field, errors in form.errors.items %}
+                <li>{{ field }}: {{ errors|join:", " }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    <div class="container">
+        <form action="" method="post" enctype="multipart/form-data" id="registerForm"> <!-- POST!!! -->
+            {% csrf_token %}
+            
+            <div class="autho">
+                <div class="row_grid">
+    
+                    <div class="form-group">
+                        <label for="email">Почта:</label>
+                        {{ form.email }}
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="password">Роль:</label>
+                        {{ form.role }}
+                    </div>
+    
+                    <div class="form-group">
+                        <!-- submit - именно подтверждение формы. была просто кнопка с редиректом -->
+                        <button id="enterBtn" type="submit">Отправить</button>
+                    </div>
+    
+                </div>
+            </div> 
+        </form>
+        <a href="{% url 'AuthReg:account' %}">here</a>
+    </div>
+
+    <div class="contacts_line">
+        <div class="contacts_block">
+            <p>craftcode@sfedu.ru</p>
+            <p>+7-(9**)-***-**-**</p>
+        </div>
+    </div>
+
+    <script src="{% static 'js/script2.js' %}"></script>
+</body>
+</html>
