@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import WarehouseForm, ItemForm
 from .models import Warehouse
 from django.contrib.auth import decorators
@@ -33,6 +33,13 @@ def create_item(request):
     else:
         form = ItemForm()
     return render(request, 'StoreHouse/create_item.html', {'form': form})
+
+# def delete_item(request, item_id):
+#     item = get_object_or_404(Item, id = item_id, warehouse__company=request.user.company)
+
+#     if request.method == 'POST':
+#         item.delete()
+#         return redirect('item')
 
 def create_warehouse(request):
     if request.method == 'POST':
