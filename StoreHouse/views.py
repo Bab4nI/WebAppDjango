@@ -8,7 +8,6 @@ from rest_framework import status
 from .models import Item
 from .serializers import ItemSerializer, ItemUpdateSerializer
 
-
 @decorators.login_required
 def profile(request):
     return render(request, 'StoreHouse/profile.html')
@@ -26,20 +25,19 @@ def create_item(request):
         form = ItemForm(request.POST)
         if form.is_valid():
             item = form.save(commit = False)
-            warehouse = item.warehouse
-            warehouse.fullness += 1
-            warehouse.save()
+            item.serial_number = item.generate_serial_number()
+            item.save()
             return redirect('StoreHouse:item_list')
     else:
         form = ItemForm()
     return render(request, 'StoreHouse/create_item.html', {'form': form})
 
-# def delete_item(request, item_id):
-#     item = get_object_or_404(Item, id = item_id, warehouse__company=request.user.company)
-
-#     if request.method == 'POST':
-#         item.delete()
-#         return redirect('item')
+def delete_item(request, item_id):
+    item = get_object_or_404(Item, id=item_id, company=request.user.company)
+    if request.method == 'POST':
+        item.delete()
+        return redirect('StoreHouse:item_list')  # Перенаправляем на список предметов
+    return render(request, 'StoreHouse/confirm_delete.html', {'item': item})
 
 def create_warehouse(request):
     if request.method == 'POST':
@@ -51,8 +49,33 @@ def create_warehouse(request):
         form = WarehouseForm()
     return render(request, 'StoreHouse/create_warehouse.html', {'form' : form})
 
+def inventory(request):
+    if request.user.is_authenticated:
+        user = request.user
+        company = user.company
 
+        if company:
+            employees = company.employees.all()
+            warehouses = company.warehouses.all()
+            items = company.items.all()
+            context = {
+                'company': company,
+                'employees': employees,
+                'warehouses': warehouses,
+                'items': items,
+            }
+        else:
+            context = {
+                'company': None,
+                'employees': [],
+                'warehouses': [],
+                'items': [],
+            }
 
+        return render(request, 'StoreHouse/inventar.html', context)
+
+    else:
+        return redirect('AuthReg:authorisation')
 
 class ItemBySerialNumber(APIView):
     def get(self, request, serial_number):
@@ -79,6 +102,5 @@ class UpdateItemLocation(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 

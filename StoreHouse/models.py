@@ -1,4 +1,5 @@
 from django.db import models
+from .utils import *
 
 class Company(models.Model):
     name = models.CharField(max_length=200)
@@ -10,7 +11,6 @@ class Warehouse(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='warehouses')
     parent_warehouse = models.ForeignKey('self', on_delete=models.CASCADE, related_name='warehouses', null = True, blank = True)
     name = models.CharField(max_length=200)
-    fullness = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -20,14 +20,24 @@ class Warehouse(models.Model):
         """Проверка, является ли склад корневым"""
         return self.parent_warehouse is None
         
+
 class Item(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='items')
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='items')
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    serial_number = models.CharField(max_length=100, unique=True)
+    serial_number = models.CharField(max_length=100, unique=True, editable=False)
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='items')
+
+    def generate_serial_number(self):
+            data = f"{self.warehouse.company.id:04d}-{self.warehouse.id:04d}-{self.id:06d}"         
+            return encrypt_data(data)
+
+    def save(self, *args, **kwargs):
+        if not self.serial_number:
+            self.serial_number = self.generate_serial_number()
+        super(Item, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name} (Серийный номер: {self.serial_number})"
-
+    

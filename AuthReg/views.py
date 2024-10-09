@@ -3,7 +3,10 @@ from .forms import SignUpForm, LoginForm
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login as auth_login, get_user_model
 from .models import Invitation
+from AuthReg.models import *
 from django.urls import reverse
+
+from django.contrib.auth.hashers import check_password
 
 def index(request):
     return render(request, 'mainTempaltes/index.html')
@@ -21,25 +24,6 @@ def registration(request):
     else:
         form = SignUpForm()
     return render(request,'AuthReg/registration.html', {'form': form, 'msg': msg})
-
-def login(request):
-    form = LoginForm(request.POST or None)
-    msg = None
-    if request.method == 'POST':
-        if form.is_valid():
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
-            user = authenticate(email=email, password=password)
-            
-            if user is not None:
-                auth_login(request, user)
-                return redirect(reverse('AuthReg/account.html'))
-            else:
-                msg = 'Invalid credentials. Please try again.'
-        else:
-            msg = 'error validating form'
-
-    return render(request, 'AuthReg/login.html', {'form': form, 'msg': msg})
 
 def create_invitation(request):
     if request.method == 'POST':
@@ -68,7 +52,6 @@ def create_invitation(request):
     
 def register_by_invitation(request, token):
     User = get_user_model()
-
     invitation = get_object_or_404(Invitation, token=token)
 
     if not invitation.is_valid():
@@ -93,34 +76,74 @@ def register_by_invitation(request, token):
     return render(request, 'register_by_invitation.html', {'invitation': invitation})
 
 def authorisation(request):
-    render(request, 'AuthReg/authorisation.html')
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            print(f"Email: {email}, Password: {password}")  # Для диагностики
+            user = authenticate(request, email=email, password=password)
+            
+            if user is None:
+                print("authenticate вернул None")
+                try:
+                    found_user = User.objects.get(email=email)
+                    print(f"Найден пользователь с email: {found_user}")
+                    if found_user.check_password(password):
+                        print("Пароль правильный, но authenticate не работает")
+                    else:
+                        print("Неверный пароль")
+                except User.DoesNotExist:
+                    print("Пользователь не найден")
+
+            if user is not None:
+                auth_login(request, user)
+                return redirect('index')
+
+        return render(request, 'AuthReg/authorisation.html', {'form': form})
+    else:
+        form = LoginForm()
+    return render(request, 'AuthReg/authorisation.html', {'form': form})
 
 def account(request):
     if request.user.is_authenticated:
         user = request.user
         company = user.company
+        if user.is_company_admin:
+            role = 'admin'
+        else:
+            role = 'employee'
+        User_context = {
+            'surname': user.surname,
+            'name': user.name,
+            'middlename': user.patronymic,
+            'email': user.email,
+            'role': role,
+        }
+
         if company:
             employees = company.employees.all()
             warehouses = company.warehouses.all()
             items = company.items.all()
-            context = {
+            Inventory_context = {
                 'company': company,
                 'employees': employees,
                 'warehouses': warehouses,
                 'items': items,
             }
         else:
-            context = {
+            Inventory_context = {
                 'company': None,
                 'employees': [],
                 'warehouses': [],
                 'items': [],
             }
 
+        context = {**User_context, **Inventory_context}
         return render(request, 'AuthReg/account.html', context)
 
     else:
-        return redirect('AuthReg:login')
+        return redirect('AuthReg:authorisation')
      
 def inventory (request):
     return render(request, 'AuthReg/inventar')

@@ -14,7 +14,7 @@ def company(request):
         return redirect(reverse('AuthReg:login'))
 
 def support(request):
-    return render('mainTemplates/support.html')
+    return render(request, 'mainTemplates/support.html')
 
 def app_link(request):
-    return render('mainTemplates/app_link.html')
+    return render(request, 'mainTemplates/app_link.html')

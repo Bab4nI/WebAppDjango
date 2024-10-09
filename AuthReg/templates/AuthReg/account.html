@@ -25,7 +25,7 @@
                     <nav class="nav">
                         <a class="nav_link" href="{% url 'index' %}">О нас</a>
                         <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
-                        <a class="nav_link" href="{% url 'AuthReg:inventory' %}">Инвентарь</a>
+                        <a class="nav_link" href="{% url 'StoreHouse:inventory' %}">Инвентарь</a>
                         <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
                     </nav>
                 </div>
@@ -99,7 +99,7 @@
                     <li>No employees found</li>
                     {% endfor %}
                 </ul>
-                <a href="{% url 'AuthReg:login' %}">Добавить сотрудника</a>
+                <a href="{% url 'AuthReg:authorisation' %}">Добавить сотрудника</a>
                 
                 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
             </div>

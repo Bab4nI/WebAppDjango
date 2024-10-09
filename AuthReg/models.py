@@ -29,7 +29,6 @@ class User(AbstractUser):
    is_company_admin = models.BooleanField(default=False)
 
    is_admin = models.BooleanField('Is admin', default=False)
-   is_employee = models.BooleanField('Is employee', default=False)
    patronymic = models.CharField('Отчество', max_length=30, blank=True, null=True)
    surname = models.CharField('Фамилия', max_length=30, blank=False, null=True)
    name = models.CharField('Имя', max_length=30, blank=False, null=True)
