@@ -1,47 +1,66 @@
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import Token
-
 from .forms import SignUpForm, LoginForm
 from django.core.mail import send_mail
-from django.contrib.auth import authenticate, login as auth_login, get_user_model
+from django.contrib.auth import login as auth_login, get_user_model
 from .models import Invitation
 from django.urls import reverse
+from rest_framework import status
+from django.contrib.auth import authenticate, login
+from .serializers import UserLoginSerializer, CompanyDetailsSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .serializers import UserDetailsSerializer
 
-from .serializers import LoginSerializer
 
 
-@login_required
-def get_user_details(request):
-    user = request.user
-    user_data = {
-        "surname": user.surname,
-        "name": user.name,
-        "patronymic": user.patronymic,
-        "email": user.email,
-        "role": "admin" if user.is_company_admin else "employee"
-    }
-    return JsonResponse(user_data)
+#--------------------------------------------------------------------------------------------------
+class UserLoginAPI(APIView):
+    def post(self, request):
+        serializer = UserLoginSerializer(data=request.data)
 
-@login_required
-def get_company_details(request):
-    company = request.user.company
-    if company:
-        company_data = {
-            "name": company.name,
-            "adminFamily": company.admin.surname,
-            "adminName": company.admin.name,
-            "adminPatronymic": company.admin.patronymic,
-        }
-        return JsonResponse(company_data)
-    else:
-        return JsonResponse({"error": "Компания не найдена"}, status=404)
+        if serializer.is_valid():
+            email = serializer.validated_data.get('email')
+            password = serializer.validated_data.get('password')
+
+            user = authenticate(request, email=email, password=password)
+
+            if user is not None:
+                login(request)  #
+                return Response({
+                    "message": "Успешный вход",
+                    "user_id": user.id,
+                    "email": user.email,
+                    "role": "admin" if user.is_admin else "employee"
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "Неверные учетные данные"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CompanyDetailsAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        company = user.company
+
+        if company:
+            serializer = CompanyDetailsSerializer(company)
+            return Response(serializer.data)
+        else:
+            return Response({"error": "Компания не найдена"}, status=404)
+
+
+class UserDetailsAPI(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = request.user
+        serializer = UserDetailsSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+#--------------------------------------------------------------------------------------------------
 
 def index(request):
     return render(request, 'mainTempaltes/index.html')
@@ -59,25 +78,6 @@ def register(request):
     else:
         form = SignUpForm()
     return render(request,'AuthReg/page2.html', {'form': form, 'msg': msg})
-
-
-@api_view(['POST'])
-def login_to_mobile(request):
-    serializer = LoginSerializer(data=request.data)
-
-    if serializer.is_valid():
-        user = serializer.validated_data['user']
-        # Аутентификация пользователя
-        login(request, user)
-
-        # Получаем или создаем токен для пользователя
-        token, created = Token.objects.get_or_create(user=user)
-
-        return Response({
-            'token': token.key
-        }, status=status.HTTP_200_OK)
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def login(request):

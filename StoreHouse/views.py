@@ -49,7 +49,7 @@ def create_warehouse(request):
 
 
 class ItemBySerialNumber(APIView):
-    def get(self, request, serial_number):
+    def get(self, serial_number):
         try:
             item = Item.objects.get(serial_number=serial_number)
             serializer = ItemSerializer(item)
