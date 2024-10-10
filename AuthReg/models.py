@@ -28,7 +28,6 @@ class User(AbstractUser):
    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True, related_name='employees')
    is_company_admin = models.BooleanField(default=False)
 
-   is_admin = models.BooleanField('Is admin', default=False)
    patronymic = models.CharField('Отчество', max_length=30, blank=True, null=True)
    surname = models.CharField('Фамилия', max_length=30, blank=False, null=True)
    name = models.CharField('Имя', max_length=30, blank=False, null=True)

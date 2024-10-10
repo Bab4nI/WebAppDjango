@@ -74,18 +74,10 @@ class SignUpForm(UserCreationForm):
         widget=forms.PasswordInput(attrs={"class": "form-control",}),
     )
     
-    role = forms.ChoiceField(
-        choices=ROLE_CHOICES,
-        widget=forms.Select(
-            attrs={
-                "class": "form-control",          
-            }
-        )
-    )
 
     class Meta:
         model = User
-        fields = ('surname', 'name', 'patronymic', 'email', 'password1', 'password2', 'role')
+        fields = ('surname', 'name', 'patronymic', 'email', 'password1', 'password2')
 
     def clean(self):
         cleaned_data = super().clean()
@@ -97,7 +89,7 @@ class SignUpForm(UserCreationForm):
 
         return cleaned_data
     
-class InviteForm(UserCreationForm):
+class InviteForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.TextInput(attrs={"class": "form-control"}))
 
     ROLE_CHOICES = [
@@ -108,7 +100,7 @@ class InviteForm(UserCreationForm):
     role = forms.ChoiceField(choices = ROLE_CHOICES, widget=forms.Select(attrs={"class": "form-control"}))
 
     class Meta:
-        model = User
+        model = User  # Используем кастомную модель пользователя
         fields = ('email', 'role')
 
     def clean_email(self):

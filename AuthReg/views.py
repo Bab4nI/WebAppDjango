@@ -11,19 +11,19 @@ from django.contrib.auth.hashers import check_password
 def index(request):
     return render(request, 'mainTempaltes/index.html')
 
-def registration(request):
-    msg = None
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            msg = 'user created'
-            return redirect('AuthReg:login')
-        else:
-            print(form.errors)
-    else:
-        form = SignUpForm()
-    return render(request,'AuthReg/registration.html', {'form': form, 'msg': msg})
+# def registration(request):
+#     msg = None
+#     if request.method == 'POST':
+#         form = SignUpForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             msg = 'user created'
+#             return redirect('AuthReg:login')
+#         else:
+#             print(form.errors)
+#     else:
+#         form = SignUpForm()
+#     return render(request,'AuthReg/registration.html', {'form': form, 'msg': msg})
 
 def create_invitation(request):
     if request.method == 'POST':   
@@ -39,7 +39,7 @@ def create_invitation(request):
                 email = email
             )
 
-            invitation_link = request.build_absolute_urri(reverse('register_by_invitation', args = [invitation.token]))
+            invitation_link = request.build_absolute_uri(reverse('AuthReg:registration', args=[invitation.token]))
 
             send_mail(
                 'Приглашение на регистрацию',
@@ -48,35 +48,43 @@ def create_invitation(request):
                 [email],
             )
 
-            return redirect(reverse(index))
+            return redirect(reverse('index'))
     else:
         form = InviteForm()
     return render(request, 'AuthReg/invitationPLUG.html', {'form': form})
     
 def register_by_invitation(request, token):
-    User = get_user_model()
     invitation = get_object_or_404(Invitation, token=token)
 
     if not invitation.is_valid():
         return render(request, 'invitation_invalid.html')
 
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            User = get_user_model()
+            user = User.objects.create_user(
+                email = form.cleaned_data['email'],
+                password = form.cleaned_data['password1'],
+                name = form.cleaned_data['name'],
+                surname = form.cleaned_data['surname'],
+                patronymic = form.cleaned_data['patronymic'],
+            )
+            user.company = invitation.company
+            user.is_company_admin = (invitation.role == 'admin')
+            user.save()
 
-        user = User.objects.create_user(
-            username=username,
-            password=password,
-            company=invitation.company,
-            is_company_admin=(invitation.role == 'admin')
-        )
+            invitation.used = True
+            invitation.save()
+            return redirect('AuthReg:authorisation')
+        else:
+            print(form.errors)
+    else:
+        form = SignUpForm()
+    return render(request, 'AuthReg/registration.html', {'invitation': invitation, 'form': form})
 
-        invitation.used = True
-        invitation.save()
-
-        return redirect('login')
-
-    return render(request, 'register_by_invitation.html', {'invitation': invitation})
+def registr(request):
+    return render(request, 'AuthReg/registr')
 
 def authorisation(request):
     if request.method == 'POST':
