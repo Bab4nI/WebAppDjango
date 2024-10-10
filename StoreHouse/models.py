@@ -1,5 +1,6 @@
 from django.db import models
 from .utils import *
+from django.contrib.auth import get_user_model
 
 class Company(models.Model):
     name = models.CharField(max_length=200)
@@ -9,7 +10,7 @@ class Company(models.Model):
 
 class Warehouse(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='warehouses')
-    parent_warehouse = models.ForeignKey('self', on_delete=models.CASCADE, related_name='warehouses', null = True, blank = True)
+    parent_warehouse = models.ForeignKey('self', on_delete=models.CASCADE, related_name='sub_warehouses', null = True, blank = True)
     name = models.CharField(max_length=200)
 
     def __str__(self):
@@ -45,4 +46,12 @@ class Item(models.Model):
 
     def __str__(self):
         return f"{self.name} (Серийный номер: {self.serial_number})"
+    
+class ItemMovement(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="movements")
+    from_warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name="moved_from")
+    to_warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name="moved_to")
+    timestamp = models.DateTimeField(auto_now_add=True)
+    new_description = models.TextField(blank=True, null=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE) 
     

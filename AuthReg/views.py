@@ -11,20 +11,6 @@ from django.contrib.auth.hashers import check_password
 def index(request):
     return render(request, 'mainTempaltes/index.html')
 
-# def registration(request):
-#     msg = None
-#     if request.method == 'POST':
-#         form = SignUpForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             msg = 'user created'
-#             return redirect('AuthReg:login')
-#         else:
-#             print(form.errors)
-#     else:
-#         form = SignUpForm()
-#     return render(request,'AuthReg/registration.html', {'form': form, 'msg': msg})
-
 def create_invitation(request):
     if request.method == 'POST':   
         form = InviteForm(data = request.POST)

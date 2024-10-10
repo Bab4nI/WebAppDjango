@@ -11,3 +11,4 @@ urlpatterns = [
     path('authorisation/', views.authorisation, name = 'authorisation'),
     path('account/', views.account, name = 'account'),
 ]
+
