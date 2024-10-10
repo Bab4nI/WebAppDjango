@@ -30,10 +30,15 @@ class Item(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='items')
 
     def generate_serial_number(self):
-            data = f"{self.warehouse.company.id:04d}-{self.warehouse.id:04d}-{self.id:06d}"         
-            return encrypt_data(data)
+        if not self.warehouse or not self.warehouse.company:
+            raise ValueError("Warehouse or company is not set")
+        data =  f"{self.warehouse.company.id:04d}-{self.warehouse.id:04d}-{self.id:06d}"
+        return encrypt_data(data)
 
     def save(self, *args, **kwargs):
+        if not self.id:
+            super(Item, self).save(*args, **kwargs) 
+
         if not self.serial_number:
             self.serial_number = self.generate_serial_number()
         super(Item, self).save(*args, **kwargs)
