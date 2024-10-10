@@ -88,7 +88,7 @@
                         </table>
                     </td>
                     <td>
-                        {% if warehouse.warehouses.exists %} <!-- Убедитесь, что имя отношения правильно -->
+                        {% if warehouse.sub_warehouses.exists %} <!-- Убедитесь, что имя отношения правильно -->
                             <table>
                                 <thead>
                                     <tr>
@@ -96,7 +96,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for sub_warehouse in warehouse.warehouses.all %}
+                                    {% for sub_warehouse in warehouse.sub_warehouses.all %}
                                         <tr>
                                             <td>{{ sub_warehouse.name }}</td>
                                         </tr>
