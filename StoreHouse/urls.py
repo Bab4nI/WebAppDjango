@@ -10,8 +10,6 @@ urlpatterns = [
     path('create_item', views.create_item, name = 'create_item'),
     path('item/<int:item_id>/delete/', views.delete_item, name='delete_item'),
     path('inventory/', views.inventory, name = 'inventory'),
-    path('warehouses/', views.warehouse_list, name='warehouse_list'),
-    path('items/', views.item_list, name='item_list'),
     path('items/<str:serial_number>/', views.ItemBySerialNumber.as_view()),
     path('items/<str:serial_number>/update-warehouse/', UpdateItemWarehouse.as_view(),name='update_item_warehouse'),
 ]

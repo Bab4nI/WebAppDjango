@@ -1,12 +1,23 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import *
 from django.core.mail import send_mail
-from django.contrib.auth import login as auth_login, get_user_model
+from django.contrib.auth import authenticate, login as auth_login, get_user_model
 from .models import Invitation
 from AuthReg.models import *
 from django.urls import reverse
-
-from django.contrib.auth.hashers import check_password
+from .serializers import UserLoginSerializer
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import Token
+from rest_framework import status
+from .serializers import UserLoginSerializer, CompanyDetailsSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .serializers import UserDetailsSerializer
 
 def index(request):
     return render(request, 'mainTempaltes/index.html')
@@ -144,3 +155,78 @@ def account(request):
      
 def inventory (request):
     return render(request, 'AuthReg/inventar')
+
+class UserLoginAPI(APIView):
+    def post(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+
+        if serializer.is_valid():
+            email = serializer.validated_data.get('email')
+            password = serializer.validated_data.get('password')
+
+            user = authenticate(request, email=email, password=password)
+
+            if user is not None:
+                auth_login(request)  #
+                return Response({
+                    "message": "Успешный вход",
+                    "user_id": user.id,
+                    "email": user.email,
+                    "role": "admin" if user.is_admin else "employee"
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "Неверные учетные данные"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CompanyDetailsAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        company = user.company
+
+        if company:
+            serializer = CompanyDetailsSerializer(company)
+            return Response(serializer.data)
+        else:
+            return Response({"error": "Компания не найдена"}, status=404)
+
+
+class UserDetailsAPI(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = request.user
+        serializer = UserDetailsSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+@login_required
+def get_user_details(request):
+    user = request.user
+    user_data = {
+        "surname": user.surname,
+        "name": user.name,
+        "patronymic": user.patronymic,
+        "email": user.email,
+        "role": "admin" if user.is_company_admin else "employee"
+    }
+    return JsonResponse(user_data)
+
+
+@login_required
+def get_company_details(request):
+    company = request.user.company
+    if company:
+        company_data = {
+            "name": company.name,
+            "adminFamily": company.admin.surname,
+            "adminName": company.admin.name,
+            "adminPatronymic": company.admin.patronymic,
+        }
+        return JsonResponse(company_data)
+    else:
+        return JsonResponse({"error": "Компания не найдена"}, status=404)
+    
+    
+

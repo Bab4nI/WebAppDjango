@@ -24,12 +24,11 @@ class Warehouse(models.Model):
 
 class Item(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='items')
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='warehouse')
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='items')
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     serial_number = models.CharField(max_length=100, unique=True, editable=False)
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='items')
-
+    
     def generate_serial_number(self):
         if not self.warehouse or not self.warehouse.company:
             raise ValueError("Warehouse or company is not set")

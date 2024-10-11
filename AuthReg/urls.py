@@ -10,9 +10,8 @@ urlpatterns = [
     path('api/user/', views.UserDetailsAPI.as_view(), name='get_user_details'),          # данные об юзере
     path('api/company/', views.CompanyDetailsAPI.as_view(), name='get_user_details'),     # данные о компании
 
-
     path('', views.index, name = 'index'),
-    #path('invite/', views.create_invitation, name = 'invite'),
+    path('invite/', views.create_invitation, name = 'invite'),
     path('create_invitation', views.create_invitation, name = 'create_invitation'),
     path('registration/<uuid:token>/', views.register_by_invitation, name = 'registration'),
     path('sucsessful_registration', views.registr, name = 'registr'),
