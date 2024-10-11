@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style3.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <title>Личный кабинет</title>
+</head>
+<body>
+    <div class="header_base">
+        <header class="header">
+            <div class="container">
+                <div class="header_inner">
+
+                    <div class="header_box">
+                        <div class="header_acc_photo">
+                            <img src="{% static 'images/profile_pic.png' %}" alt="user_img">    
+                        </div>
+                        <p>user_name</p>
+                    </div>
+                    
+                    <nav class="nav">
+                        <a class="nav_link" href="{% url 'index' %}">О нас</a>
+                        <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
+                        <a class="nav_link" href="{% url 'StoreHouse:inventory' %}">Инвентарь</a>
+                        <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+    
+    <div class="main-content">
+        <aside class="sidebar">
+            <ul>
+                <li onclick="showContent('about')">О себе</li>
+                <li onclick="showContent('company')">Данные компании</li>
+                <li onclick="showContent('activity')">Журнал действий</li>
+            </ul>
+        </aside>
+
+        <section class="content">
+            <div id="about" class="content-section active">
+                <h2>О себе</h2>
+                <div class="colomn_grid">
+                
+                    <div class="photo-upload">
+                        <label for="photo">
+                            <img src="{% static 'images/profile_pic.png' %}" alt="Фото профиля" id="profilePhoto" class="profile-photo" >
+                        </label>
+                        <input type="file" id="photo" name="photo" accept="image/*" onchange="loadFile(event)">
+                    </div>
+        
+                    <div class="row_grid">
+    
+                        <div class="form-group">
+                            <label for="surname">Фамилия:</label>
+                            <input type="text" id="surname" name="surname" value="{{ surname }}" readonly>
+                        </div>
+            
+                        <div class="form-group">
+                            <label for="name">Имя:</label>
+                            <input type="text" id="name" name="name" value="{{ name }}" readonly>
+                        </div>
+            
+                        <div class="form-group">
+                            <label for="middlename">Отчество:</label>
+                            <input type="text" id="middlename" name="middlename" value="{{ middlename }}" readonly>
+                        </div>
+            
+                        <div class="form-group">
+                            <label for="email">Почта:</label>
+                            <input type="email" id="email" name="email" value="{{ email }}" readonly>
+                        </div>
+            
+                        <div class="form-group">
+                            <label for="role">Роль:</label>
+                            <input type="text" id="role" name="role" value="{{ role }}" readonly>
+                        </div>
+                    </div>
+                </div> 
+                <br><br><br><br><br><br><br>
+            </div>
+
+            <div id="company" class="content-section">
+                <h2>Название компании</h2>
+                <div class="form-group">
+                    <input type="text" id="company_name" name="company_name" value="{{ company.name }}" readonly>
+                </div>
+
+                <h2>Зарегистрированные сотрудники</h2>
+                <ul>
+                    {% for employee in employees %}
+                    <li>{{ employee.surname }} {{ employee.name }} {{ employee.middlename }} {{ employee.role }}</li>
+                    {% empty %}
+                    <li>No employees found</li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'AuthReg:create_invitation' %}">Добавить сотрудника</a>
+                
+                <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            </div>
+
+            <div id="activity" class="content-section">
+                <h2>Журнал действий</h2>
+                <!-- Журнал действий -->
+            </div>
+        </section>
+    </div>
+
+    <div class="contacts_line">
+        <div class="contacts_block">
+            <p>craftcode@sfedu.ru</p>
+            <p>+7-(9**)-***-**-**</p>
+        </div>
+    </div>
+
+    <script src="{% static 'js/script3.js' %}"> </script>
+</body>
+</html>

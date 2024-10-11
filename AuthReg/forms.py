@@ -74,18 +74,10 @@ class SignUpForm(UserCreationForm):
         widget=forms.PasswordInput(attrs={"class": "form-control",}),
     )
     
-    role = forms.ChoiceField(
-        choices=ROLE_CHOICES,
-        widget=forms.Select(
-            attrs={
-                "class": "form-control",          
-            }
-        )
-    )
 
     class Meta:
         model = User
-        fields = ('surname', 'name', 'patronymic', 'email', 'password1', 'password2', 'role')
+        fields = ('surname', 'name', 'patronymic', 'email', 'password1', 'password2')
 
     def clean(self):
         cleaned_data = super().clean()
@@ -96,3 +88,23 @@ class SignUpForm(UserCreationForm):
             raise forms.ValidationError("Пароли не совпадают.")
 
         return cleaned_data
+    
+class InviteForm(forms.ModelForm):
+    email = forms.EmailField(widget=forms.TextInput(attrs={"class": "form-control"}))
+
+    ROLE_CHOICES = [
+        ('admin', 'Админ'),
+        ('employee', 'Сотрудник'),
+    ]
+
+    role = forms.ChoiceField(choices = ROLE_CHOICES, widget=forms.Select(attrs={"class": "form-control"}))
+
+    class Meta:
+        model = User  # Используем кастомную модель пользователя
+        fields = ('email', 'role')
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Пользователь с таким email уже существует.")
+        return email
