@@ -181,6 +181,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .sidebar {
+    height: 100vh;
     width: 20%;
     background-color: #efdcf2;
     padding: 20px;
@@ -246,3 +247,28 @@ input[type="file"] {
     display: none;
 }
 
+button {
+    background-color: #8855a1;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #300d43;
+}
+
+table, th, td {
+    border: 1px solid #300d43;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+th {
+    background-color: #efdcf2;
+}

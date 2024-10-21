@@ -1,11 +1,10 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/style2.css'%}">
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
     <title>Регистрация</title>
@@ -20,7 +19,7 @@
                     <nav class="nav">
                         <a class="nav_link" href="{% url 'index' %}">О нас</a>
                         <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
-                        <a class="nav_link" href="{% url 'AuthReg:registr' %}">Инвентарь</a>
+                        <a class="nav_link" href="{% url 'StoreHouse:inventory' %}">Инвентарь</a>
                         <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
                     </nav>
                 </div>
@@ -34,11 +33,8 @@
         </div>
     </div>
 
-    
     <div class="container">
         <form action="" method="post" enctype="multipart/form-data" id="registerForm">
-            {% csrf_token %}
-
             <div class="colomn_grid">
                 
                 <div class="photo-upload">
@@ -52,38 +48,45 @@
 
                     <div class="form-group">
                         <label for="surname">Фамилия:</label>
-                        {{ form.surname }}
+                        <input type="text" id="surname" name="surname" required>
                     </div>
         
                     <div class="form-group">
                         <label for="name">Имя:</label>
-                        {{ form.name }}
+                        <input type="text" id="name" name="name" required>
                     </div>
         
                     <div class="form-group">
                         <label for="middlename">Отчество:</label>
-                        {{ form.patronymic }}
+                        <input type="text" id="middlename" name="middlename">
                     </div>
         
                     <div class="form-group">
                         <label for="email">Почта:</label>
-                        {{ form.email }}
+                        <input type="email" id="email" name="email" required>
                     </div>
         
                     <div class="form-group">
                         <label for="password">Пароль:</label>
-                        {{ form.password1 }}
+                        <input type="password" id="password" name="password" required>
                         <small>Пароль должен содержать не менее 8 символов.</small>
                     </div>
         
                     <div class="form-group">
                         <label for="confirm_password">Подтвердите пароль:</label>
-                        {{ form.password2 }}
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="role">Роль:</label>
+                        <select id="role" name="role">
+                            <option value="admin">Администратор</option>
+                            <option value="employee">Сотрудник</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
-                        <button id="enterBtn" type="submit" href = "{% url 'AuthReg:registr' %}">Далее &rarr;</button>
-                        <!-- <button id="submitBtn" type="button" href="{% url 'AuthReg:registr' %}">Далее &rarr;</button> -->
+                        <button id="submitBtn" type="submit">Далее &rarr;</button>
                     </div>
                     
                 </div>

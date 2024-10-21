@@ -1,13 +1,12 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style2.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
     <title>Успешно!</title>
 </head>
 <body>
@@ -20,7 +19,7 @@
                     <nav class="nav">
                         <a class="nav_link" href="{% url 'index' %}">О нас</a>
                         <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
-                        <a class="nav_link" href="{% url 'StoreHouse:inventar' %}">Инвентарь</a>
+                        <a class="nav_link" href="{% url 'StoreHouse:inventory' %}">Инвентарь</a>
                         <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
                     </nav>
                 </div>
@@ -36,17 +35,18 @@
 
     <div class="container">
         <div class="text_reg">
-            <h1>Регистрация прошла успешно!</h1>
-            <p>Сотрудник зарегистрирован в нашей системе.</p>
+            <h1>Регистрация прошла успешно! </h1>
+            <p>Сотрудник зарегистрирован в нашей системе. </p>
             <br><br>
             <div class="img_reg">
                 <img src="{% static 'images/e3a78ca04f002623dec2.png' %}" alt="checkmark"><br>
             </div>
-            <a href="{% url 'account' %}">
+            <a href="{% url 'AuthReg:account' %}">
                 <button id="ToAccount">Вернуться к учетной записи</button>
             </a>
             <br><br><br>
         </div>
+        
     </div>
 
     <div class="contacts_line">
@@ -56,6 +56,6 @@
         </div>
     </div>
 
-    <script src="{% static 'js/script2.js' %}"></script>
+    <script src="{% static 'js/script2.js' %}"> </script>
 </body>
 </html>
