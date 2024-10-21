@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/style4.css">
+    <link rel="stylesheet" href="{% static 'css/style4.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
     <title>Личный кабинет</title>
@@ -16,16 +17,16 @@
 
                     <div class="header_box">
                         <div class="header_acc_photo">
-                            <img src="/assets/images/profile_pic.png" alt="user_img">    
+                            <img src="{% static 'images/profile_pic.png' %}" alt="user_img">    
                         </div>
                         <p>user_name</p>
                     </div>
                     
                     <nav class="nav">
-                        <a class="nav_link" href="index.html">О нас</a>
-                        <a class="nav_link" href="account.html">Личный кабинет</a>
-                        <a class="nav_link" href="inventar.html">Инвентарь</a>
-                        <a class="nav_link" href="support.html">Связь с поддержкой</a>
+                        <a class="nav_link" href="{% url 'index' %}">О нас</a>
+                        <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
+                        <a class="nav_link" href="{% url 'StoreHouse:inventory' %}">Инвентарь</a>
+                        <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
                     </nav>
                 </div>
             </div>
@@ -36,8 +37,11 @@
         <button class="dropbtn">Опции</button>
         <div class="dropdown-content">
             <a href="#" id="addRecord">Добавить запись</a>
+            <a href="#" id="changeRecord">Изменить запись</a>
             <a href="#" id="deleteRecord">Удалить запись</a>
-            <a href="#" id="addHeader">Добавить заголовок</a>
+            <a href="#" id="addWarehouse">Добавить склад</a>
+            <a href="#" id="changeWarehouse">Изменить склад</a>
+            <a href="#" id="deleteWarehouse">Удалить склад</a>
         </div>
     </div>
 
@@ -49,32 +53,46 @@
         </div>
     </div>
 
+    <label for="warehouseSelect">Выберите склад:</label>
+    <select id="warehouseSelect">
+        {% for warehouse in warehouses %}
+            <option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
+        {% endfor %}
+    </select>
+
     <table>
         <thead>
-            <th>№</th>
-            <th>QR-код</th>
-            <th>Наименование товара</th>
-            <th>Местонахождение</th>
-            <th>Ответственное лицо</th>
+            <tr>
+                <th>№</th>
+                <th>Наименование товара</th>
+                <th>Местонахождение</th>
+                <th>Ответственное лицо</th>
+            </tr>
         </thead>
-        <tbody>
-            {% for warehouses in warehouses %}
+        <tbody id="tableBody">
+            {% for warehouse in warehouses %} 
                 <tr>
-                    <td>{{ .identification-number }}</td>
-                    <td>{{ .qr-code }}</td>
-                    <td>{{ .product-name }}</td>
-                    <td>{{ .location }}</td>
-                    <td>{{ .responsible-employee }}</td>
+                    <td>
+                        {{ forloop.counter }} <br>
+                        <button class="qr-btn" data-qrcode="{{ warehouse.qr_code }}">Показать QR</button>
+                    </td>
+                    <td>{{ warehouse.name }}</td>
+                    <td>{{ warehouse.location }}</td>
+                    <td>{{ warehouse.responsible_employee }}</td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="5">No products found.</td>
+                    <td colspan="4">Товары не найдены.</td>
                 </tr>
-            {% endfor %}
+            {% endfor %} 
         </tbody>
-    </table>
+    </table> 
 
-    <script src="script4.js"></script>
-    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <div id="qrPopup" class="qr-popup" style="display:none;">
+        <img id="qrCode" src="" alt="QR-код">
+        <button id="closeQrPopup">Закрыть</button>
+    </div>
+
+    <script src="{% static 'js/script4.js' %}"></script>
 </body>
 </html>
