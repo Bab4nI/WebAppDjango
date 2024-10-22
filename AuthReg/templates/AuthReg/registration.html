@@ -35,6 +35,8 @@
 
     <div class="container">
         <form action="" method="post" enctype="multipart/form-data" id="registerForm">
+            {% csrf_token %}
+
             <div class="colomn_grid">
                 
                 <div class="photo-upload">
@@ -48,41 +50,33 @@
 
                     <div class="form-group">
                         <label for="surname">Фамилия:</label>
-                        <input type="text" id="surname" name="surname" required>
+                        {{ form.surname }}
                     </div>
         
                     <div class="form-group">
                         <label for="name">Имя:</label>
-                        <input type="text" id="name" name="name" required>
+                        {{ form.name }}
                     </div>
         
                     <div class="form-group">
                         <label for="middlename">Отчество:</label>
-                        <input type="text" id="middlename" name="middlename">
+                        {{ form.patronymic }}
                     </div>
         
                     <div class="form-group">
                         <label for="email">Почта:</label>
-                        <input type="email" id="email" name="email" required>
+                        {{ form.email }}
                     </div>
         
                     <div class="form-group">
                         <label for="password">Пароль:</label>
-                        <input type="password" id="password" name="password" required>
+                        {{ form.password1 }}
                         <small>Пароль должен содержать не менее 8 символов.</small>
                     </div>
         
                     <div class="form-group">
                         <label for="confirm_password">Подтвердите пароль:</label>
-                        <input type="password" id="confirm_password" name="confirm_password" required>
-                    </div>
-        
-                    <div class="form-group">
-                        <label for="role">Роль:</label>
-                        <select id="role" name="role">
-                            <option value="admin">Администратор</option>
-                            <option value="employee">Сотрудник</option>
-                        </select>
+                        {{ form.password2 }} 
                     </div>
 
                     <div class="form-group">
