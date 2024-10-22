@@ -1,16 +1,33 @@
 from rest_framework import serializers
-from .models import InventoryRequest, Warehouse
+from .models import InventoryRequest, Warehouse, Item
 
 
 class InventoryRequestSerializer(serializers.ModelSerializer):
-    deadline = serializers.DateTimeField(format="%d.%m.%Y %H:%M")  # Настройка формата времени
+    items = serializers.SlugRelatedField(
+        many=True,
+        slug_field='serial_number',
+        queryset=Item.objects.all(),
+        required=False  # Делаем необязательным
+    )
 
-    # Сериализация списка складов
+    # Поле для складов (с числовыми ID)
     warehouses = serializers.SlugRelatedField(
         many=True,
-        slug_field='name',
-        queryset=Warehouse.objects.all()
+        slug_field='name',  # Если хотите использовать имена складов вместо ID
+        queryset=Warehouse.objects.all(),
+        required=True
     )
+
     class Meta:
         model = InventoryRequest
-        fields = ['employee', 'warehouses', 'deadline', 'status']
+        fields = ['id', 'employee', 'warehouses', 'items', 'deadline', 'status']
+
+
+
+from rest_framework import serializers
+from .models import Item
+
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = ['id', 'name', 'serial_number', 'warehouse']  # Укажите нужные поля

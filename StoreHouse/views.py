@@ -1,14 +1,54 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+from AuthReg.models import User
 from .forms import WarehouseForm, ItemForm, ItemMovementForm
-from .models import Warehouse
-from django.contrib.auth import decorators
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
 from .models import Item, ItemMovement
-from .serializers import ItemSerializer, ItemUpdateSerializer
+from .serializers import ItemUpdateSerializer
 from django.urls import reverse
+from .models import Warehouse
+from .serializers import WarehouseSerializer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.db.models import Q
+from .serializers import ItemSerializer, EmployeeSerializer  # Подставь свои сериализаторы
 
+
+
+class SearchAPIView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        query = request.query_params.get('q', None)
+
+        if query is None or query == "":
+            return Response({"error": "Поисковый запрос не указан"}, status=400)
+
+        # Фильтрация по сотрудникам (например, по имени, фамилии и отчеству)
+        employee_results = User.objects.filter(
+            Q(name__icontains=query) | Q(surname__icontains=query) | Q(patronymic__icontains=query)
+        )
+
+        # Фильтрация по товарам (по названию товара)
+        item_results = Item.objects.filter(name__icontains=query)
+
+        # Сериализация данных
+        employee_serializer = EmployeeSerializer(employee_results, many=True)
+        item_serializer = ItemSerializer(item_results, many=True)
+
+        # Объединение данных
+        results = {
+            "employees": employee_serializer.data,
+            "items": item_serializer.data
+        }
+
+        return Response(results, status=200)
+
+
+class WarehouseListView(APIView):
+    def get(self, request):
+        warehouses = Warehouse.objects.all()
+        serializer = WarehouseSerializer(warehouses, many=True)
+        return Response(serializer.data)
 
 def create_item(request):
     if request.method == 'POST':
@@ -76,13 +116,13 @@ def inventory(request):
         return redirect('AuthReg:authorisation')
 
 class ItemBySerialNumber(APIView):
-    def get(self, serial_number):
+    def get(self, request, serial_number):
         try:
             item = Item.objects.get(serial_number=serial_number)
             serializer = ItemSerializer(item)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Item.DoesNotExist:
-            return Response({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class UpdateItemWarehouse(APIView):  # Изменено название

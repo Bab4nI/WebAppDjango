@@ -5,13 +5,8 @@ from django.contrib.auth import authenticate, login as auth_login, get_user_mode
 from .models import Invitation
 from AuthReg.models import *
 from django.urls import reverse
-from .serializers import UserLoginSerializer
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import Token
 from rest_framework import status
 from .serializers import UserLoginSerializer, CompanyDetailsSerializer
 from rest_framework.views import APIView
@@ -21,6 +16,8 @@ from .serializers import UserDetailsSerializer
 
 def index(request):
     return render(request, 'mainTempaltes/index.html')
+
+
 
 def create_invitation(request):
     if request.method == 'POST':   
