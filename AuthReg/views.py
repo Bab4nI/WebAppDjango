@@ -54,7 +54,7 @@ def register_by_invitation(request, token):
     invitation = get_object_or_404(Invitation, token=token)
 
     if not invitation.is_valid():
-        return render(request, 'invitation_invalid.html')
+        return render(request, 'AuthReg/invitation_invalid.html')
 
     if request.method == 'POST':
         form = SignUpForm(request.POST)
