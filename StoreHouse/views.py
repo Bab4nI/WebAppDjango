@@ -52,6 +52,8 @@ def inventory(request):
         user = request.user
         company = user.company
 
+        
+
         if company:
             employees = company.employees.all()
             warehouses = company.warehouses.all()
@@ -69,6 +71,7 @@ def inventory(request):
                 'warehouses': [],
                 'items': [],
             }
+
 
         return render(request, 'StoreHouse/inventar.html', context)
 
