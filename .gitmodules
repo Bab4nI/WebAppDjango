@@ -1,0 +1,3 @@
+[submodule "inventarisation_web"]
+	path = inventarisation_web
+	url = https://github.com/sonadr/inventarisation_web.git
