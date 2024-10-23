@@ -11,8 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
-from django.urls import reverse_lazy
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -168,3 +167,6 @@ SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 LOGOUT_REDIRECT_URL = '/'
+
+MEDIA_URL = 'stock/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

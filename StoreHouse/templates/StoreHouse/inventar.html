@@ -74,7 +74,7 @@
                 <tr>
                     <td>
                         {{ item.serial_number }} <br>
-                        <button class="qr-btn" data-qrcode="{{ item.qr_code }}">Показать QR</button>
+                        <button class="qr-btn" data-qrcode="{{ item.qr_code.url }}">Показать QR</button>
                     </td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.warehouse.name }}</td>
