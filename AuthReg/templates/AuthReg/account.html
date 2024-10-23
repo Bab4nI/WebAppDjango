@@ -83,7 +83,12 @@
                         </div>
                     </div>
                 </div> 
-                <button type="button" id="exitBtn">Выйти из аккаунта</button>
+
+                <form id="logoutForm" method="post" action="{% url 'AuthReg:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" id="submitBtn">Выйти из аккаунта</button>
+                </form>
+
             </div>
 
             <div id="company" class="content-section">

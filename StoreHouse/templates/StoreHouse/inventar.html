@@ -71,15 +71,17 @@
         </thead>
         <tbody id="tableBody">
             {% for warehouse in warehouses %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ warehouse.name }}</td>
-                    <td>{{ warehouse.location }}</td>
-                    <td>{{ warehouse.responsible_employee }}</td>
-                    <td>
-                        <button class="qr-btn" data-qrcode="{{ warehouse.qr_code }}">Показать QR</button>
-                    </td>
-                </tr>
+                {% for item in warehouse.items.all %}
+                    <tr>
+                        <td>{{ forloop.parentloop.counter }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ warehouse.name }}</td>
+                        <td>{{ warehouse.responsible_employee }}</td>
+                        <td>
+                            <button class="qr-btn" data-qrcode="{{ item.serial_number }}">Показать QR</button>
+                        </td>
+                    </tr>
+                {% endfor %}
             {% empty %}
                 <tr>
                     <td colspan="4">Товары не найдены.</td>
@@ -87,7 +89,7 @@
             {% endfor %}
         </tbody>
     </table>
-
+    
     <div id="qrPopup" class="qr-popup" style="display:none;">
         <img id="qrCode" src="" alt="QR-код">
         <button id="closeQrPopup">Закрыть</button>
