@@ -35,8 +35,6 @@ function validateForm() {
     doneButton.disabled = !allFilled;
 }
 
-
-
 document.getElementById("addRecord").onclick = function() {
     openPopup(`
         <h3>Добавить запись</h3>
@@ -94,59 +92,59 @@ document.getElementById("addRecord").onclick = function() {
 
 
 
-document.getElementById("changeRecord").onclick = function() {
-    openPopup(`
-        <h3>Изменить запись</h3>
-        <p>Выберите запись для изменения:</p>
-        <input type="text" id="serialNumber" placeholder="ID записи" class="input-field"><br>
-        <p>Введите новые данные:</p>
-        <input type="text" id="name" placeholder="Новое название" class="input-field"><br>
-        <input type="text" id="location" placeholder="Новое местоположение" class="input-field"><br>
-        <input type="text" id="responsibleEmployee" placeholder="Новый сотрудник" class="input-field"><br><br>
-    `);
+// document.getElementById("changeRecord").onclick = function() {
+//     openPopup(`
+//         <h3>Изменить запись</h3>
+//         <p>Выберите запись для изменения:</p>
+//         <input type="text" id="serialNumber" placeholder="ID записи" class="input-field"><br>
+//         <p>Введите новые данные:</p>
+//         <input type="text" id="name" placeholder="Новое название" class="input-field"><br>
+//         <input type="text" id="location" placeholder="Новое местоположение" class="input-field"><br>
+//         <input type="text" id="responsibleEmployee" placeholder="Новый сотрудник" class="input-field"><br><br>
+//     `);
 
-    const inputs = document.querySelectorAll("#popupInnerContent .input-field");
-    inputs.forEach(input => {
-        input.addEventListener("input", validateForm);
-    });
+//     const inputs = document.querySelectorAll("#popupInnerContent .input-field");
+//     inputs.forEach(input => {
+//         input.addEventListener("input", validateForm);
+//     });
 
-    doneButton.disabled = true;
+//     doneButton.disabled = true;
 
-    doneButton.onclick = function() {
-        const serialNumber = document.getElementById("serialNumber").value; 
-        const name = document.getElementById("name").value;
-        const location = document.getElementById("location").value;
-        const responsibleEmployee = document.getElementById("responsibleEmployee").value;
+//     doneButton.onclick = function() {
+//         const serialNumber = document.getElementById("serialNumber").value; 
+//         const name = document.getElementById("name").value;
+//         const location = document.getElementById("location").value;
+//         const responsibleEmployee = document.getElementById("responsibleEmployee").value;
 
-        // Подготовка данных для отправки
-        const data = {
-            serialNumber: serialNumber,
-            name: name,
-            location: location,
-            responsibleEmployee: responsibleEmployee
-        };
+//         // Подготовка данных для отправки
+//         const data = {
+//             serialNumber: serialNumber,
+//             name: name,
+//             location: location,
+//             responsibleEmployee: responsibleEmployee
+//         };
 
-        // Отправка данных на сервер с использованием fetch для изменения записи
-        fetch(`/api/changeRecord/${serialNumber}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log("Запись успешно изменена:", result);
-            // Закрытие всплывающего окна после успешного изменения данных
-            popup.style.display = "none";
-        })
-        .catch(error => {
-            console.error("Ошибка при изменении записи:", error);
-        });
+//         // Отправка данных на сервер с использованием fetch для изменения записи
+//         fetch(`/api/changeRecord/${serialNumber}`, {
+//             method: "PUT",
+//             headers: {
+//                 "Content-Type": "application/json"
+//             },
+//             body: JSON.stringify(data)
+//         })
+//         .then(response => response.json())
+//         .then(result => {
+//             console.log("Запись успешно изменена:", result);
+//             // Закрытие всплывающего окна после успешного изменения данных
+//             popup.style.display = "none";
+//         })
+//         .catch(error => {
+//             console.error("Ошибка при изменении записи:", error);
+//         });
 
-        popup.style.display = "none";
-    };
-};
+//         popup.style.display = "none";
+//     };
+// };
 
 
 
@@ -237,55 +235,55 @@ document.getElementById("addWarehouse").onclick = function() {
 };
 
 // Действие по нажатию на "Изменить склад"
-document.getElementById("changeWarehouse").onclick = function() {
-    openPopup(`
-        <h3>Изменить склад</h3>
-        <p>Введите ID склада для изменения:</p>
-        <input type="text" id="warehouseId" placeholder="ID склада" class="input-field"><br>
-        <p>Введите новые данные склада:</p>
-        <input type="text" id="warehouseName" placeholder="Новое название склада" class="input-field"><br><br>
-    `);
+// document.getElementById("changeWarehouse").onclick = function() {
+//     openPopup(`
+//         <h3>Изменить склад</h3>
+//         <p>Введите ID склада для изменения:</p>
+//         <input type="text" id="warehouseId" placeholder="ID склада" class="input-field"><br>
+//         <p>Введите новые данные склада:</p>
+//         <input type="text" id="warehouseName" placeholder="Новое название склада" class="input-field"><br><br>
+//     `);
 
-    // Добавляем валидацию полей
-    const inputs = document.querySelectorAll("#popupInnerContent .input-field");
-    inputs.forEach(input => {
-        input.addEventListener("input", validateForm);
-    });
+//     // Добавляем валидацию полей
+//     const inputs = document.querySelectorAll("#popupInnerContent .input-field");
+//     inputs.forEach(input => {
+//         input.addEventListener("input", validateForm);
+//     });
 
-    // Сброс состояния кнопки "Готово"
-    doneButton.disabled = true;
+//     // Сброс состояния кнопки "Готово"
+//     doneButton.disabled = true;
 
-    doneButton.onclick = function() {
-        const warehouseId = document.getElementById("warehouseId").value; 
-        const warehouseName = document.getElementById("warehouseName").value;
+//     doneButton.onclick = function() {
+//         const warehouseId = document.getElementById("warehouseId").value; 
+//         const warehouseName = document.getElementById("warehouseName").value;
 
-        // Подготовка данных для отправки
-        const data = {
-            warehouseId: warehouseId,
-            warehouseName: warehouseName,
-        };
+//         // Подготовка данных для отправки
+//         const data = {
+//             warehouseId: warehouseId,
+//             warehouseName: warehouseName,
+//         };
 
-        // Отправка данных на сервер с использованием fetch для изменения записи
-        fetch(`/api/changeRecord/${warehouseId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log("Запись успешно изменена:", result);
-            // Закрытие всплывающего окна после успешного изменения данных
-            popup.style.display = "none";
-        })
-        .catch(error => {
-            console.error("Ошибка при изменении записи:", error);
-        });
+//         // Отправка данных на сервер с использованием fetch для изменения записи
+//         fetch(`/api/changeRecord/${warehouseId}`, {
+//             method: "PUT",
+//             headers: {
+//                 "Content-Type": "application/json"
+//             },
+//             body: JSON.stringify(data)
+//         })
+//         .then(response => response.json())
+//         .then(result => {
+//             console.log("Запись успешно изменена:", result);
+//             // Закрытие всплывающего окна после успешного изменения данных
+//             popup.style.display = "none";
+//         })
+//         .catch(error => {
+//             console.error("Ошибка при изменении записи:", error);
+//         });
 
-        popup.style.display = "none";
-    };
-};
+//         popup.style.display = "none";
+//     };
+// };
 
 // Действие по нажатию на "Удалить склад"
 document.getElementById("deleteWarehouse").onclick = function() {

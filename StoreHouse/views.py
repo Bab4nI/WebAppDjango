@@ -8,6 +8,8 @@ from rest_framework import status
 from .models import Item, ItemMovement
 from .serializers import ItemSerializer, ItemUpdateSerializer
 from django.urls import reverse
+from django.http import JsonResponse, HttpResponseNotAllowed
+from django.views import View
 
 def edit_item(request, item_id):
     item = get_object_or_404(Item, id=item_id)
@@ -25,7 +27,7 @@ def edit_item(request, item_id):
     else:
         form = ItemForm(instance=item)
 
-    return render(request, 'edit_item.html', {'form': form, 'item': item, 'warehouses': warehouses})
+    return render(request, 'StoreHouse/edit_item.html', {'form': form, 'item': item, 'warehouses': warehouses})
 
 def create_item(request):
     if request.method == 'POST':
@@ -40,11 +42,11 @@ def create_item(request):
     return render(request, 'StoreHouse/create_item.html', {'form': form})
 
 def delete_item(request, item_id):
-    item = get_object_or_404(Item, id=item_id, company=request.user.company)
-    if request.method == 'POST':
+    if request.method == 'DELETE':
+        item = get_object_or_404(Item, id=item_id)
         item.delete()
-        return redirect('StoreHouse:item_list')  # Перенаправляем на список предметов
-    return render(request, 'StoreHouse/confirm_delete.html', {'item': item})
+        return JsonResponse({'message': 'Item deleted successfully'}, status=200)
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 def create_warehouse(request):
     if request.method == 'POST':
@@ -99,7 +101,7 @@ def inventory(request):
         return redirect('AuthReg:authorisation')
 
 class ItemBySerialNumber(APIView):
-    def get(self, serial_number):
+    def get(self, request, serial_number): 
         try:
             item = Item.objects.get(serial_number=serial_number)
             serializer = ItemSerializer(item)

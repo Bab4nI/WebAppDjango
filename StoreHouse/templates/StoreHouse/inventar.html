@@ -36,8 +36,8 @@
     <div class="dropdown">
         <button class="dropbtn">Опции</button>
         <div class="dropdown-content">
-            <a href="#" id="addItem">Добавить предмет</a>
-            <a href="#" id="addItem">Удалить предмет</a>
+            <a href="#" id="addRecord">Добавить предмет</a>
+            <a href="#" id="deleteRecord">Удалить предмет</a>
             <a href="#" id="addWarehouse">Добавить склад</a>
             <a href="#" id="deleteWarehouse">Удалить склад</a>
         </div>
@@ -80,7 +80,7 @@
                     <td>{{ item.responsible_employee }}</td>
                     <td>
                         <a href="{% url 'StoreHouse:edit_item' item.id %}">Изменить</a>
-                        <a href="#" id="deleteItem" data-item-id="{{ item.id }}">Удалить</a>
+                        <button class="deleteRecord" data-item-id="{{ item.id }}">Удалить</button>
                     </td>
                 </tr>
             {% empty %}
@@ -96,6 +96,16 @@
         <button id="closeQrPopup">Закрыть</button>
     </div>
 
+    <div id="deleteConfirmation" class="popup" style="display:none;">
+        <div class="popup-content">
+            {% csrf_token %}
+            <p>Вы уверены, что хотите удалить этот элемент?</p>
+            <button id="confirmDeleteButton">Да</button>
+            <button id="cancelDeleteButton">Нет</button>
+        </div>
+    </div>    
+
     <script src="{% static 'js/script4.js' %}"></script>
+    <script src="{% static 'js/script5.js' %}"></script>
 </body>
 </html>
