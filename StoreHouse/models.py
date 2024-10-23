@@ -28,7 +28,8 @@ class Item(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     serial_number = models.CharField(max_length=100, unique=True, editable=False)
-    
+    responsible_employee = models.ForeignKey('AuthReg.User', on_delete=models.CASCADE, related_name='items', null=True, blank=True)
+
     def generate_serial_number(self):
         if not self.warehouse or not self.warehouse.company:
             raise ValueError("Warehouse or company is not set")
