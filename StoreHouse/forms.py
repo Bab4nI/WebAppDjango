@@ -9,7 +9,7 @@ class WarehouseForm(forms.ModelForm):
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ['name', 'description', 'warehouse']
+        fields = ['name', 'description', 'warehouse', 'responsible_employee']
 
 class ItemMovementForm(forms.ModelForm):
     class Meta:

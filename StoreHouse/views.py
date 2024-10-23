@@ -9,6 +9,23 @@ from .models import Item, ItemMovement
 from .serializers import ItemSerializer, ItemUpdateSerializer
 from django.urls import reverse
 
+def edit_item(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    warehouses = Warehouse.objects.filter(company=request.user.company)
+
+    if request.method == 'POST':
+        form = ItemForm(request.POST, instance=item)
+        if form.is_valid():
+            # Необходимо генерировать serial_number, если он не задан
+            item = form.save(commit=False)
+            if not item.serial_number:  # Если serial_number еще не был задан
+                item.serial_number = item.generate_serial_number()
+            item.save()
+            return redirect('StoreHouse:inventory')
+    else:
+        form = ItemForm(instance=item)
+
+    return render(request, 'edit_item.html', {'form': form, 'item': item, 'warehouses': warehouses})
 
 def create_item(request):
     if request.method == 'POST':

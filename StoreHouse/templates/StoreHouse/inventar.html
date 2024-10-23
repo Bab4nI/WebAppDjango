@@ -36,11 +36,9 @@
     <div class="dropdown">
         <button class="dropbtn">Опции</button>
         <div class="dropdown-content">
-            <a href="#" id="addRecord">Добавить запись</a>
-            <a href="#" id="changeRecord">Изменить запись</a>
-            <a href="#" id="deleteRecord">Удалить запись</a>
+            <a href="#" id="addItem">Добавить предмет</a>
+            <a href="#" id="addItem">Удалить предмет</a>
             <a href="#" id="addWarehouse">Добавить склад</a>
-            <a href="#" id="changeWarehouse">Изменить склад</a>
             <a href="#" id="deleteWarehouse">Удалить склад</a>
         </div>
     </div>
@@ -67,6 +65,7 @@
                 <th>Наименование товара</th>
                 <th>Местонахождение</th>
                 <th>Ответственное лицо</th>
+                <th>Опции</th>
             </tr>
         </thead>
         <tbody id="tableBody">
@@ -78,7 +77,11 @@
                     </td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.warehouse.name }}</td>
-                    <td>{{ item.responsible_employee }}</td> <!-- если ответственное лицо привязано к складу -->
+                    <td>{{ item.responsible_employee }}</td>
+                    <td>
+                        <a href="{% url 'StoreHouse:edit_item' item.id %}">Изменить</a>
+                        <a href="#" id="deleteItem" data-item-id="{{ item.id }}">Удалить</a>
+                    </td>
                 </tr>
             {% empty %}
                 <tr>
