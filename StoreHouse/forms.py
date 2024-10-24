@@ -1,6 +1,6 @@
 from django import forms
 from .models import Warehouse, Item, ItemMovement
-
+from django.db.models import Q
 class WarehouseForm(forms.ModelForm):
     class Meta:
         model = Warehouse
@@ -12,7 +12,9 @@ class WarehouseForm(forms.ModelForm):
 
         if parent_warehouse:
             # Фильтруем поле 'warehouse', чтобы показывать только подсклады данного родительского склада
-            self.fields['parent_warehouse'].queryset = Warehouse.objects.filter(parent_warehouse=parent_warehouse)
+            self.fields['parent_warehouse'].queryset = Warehouse.objects.filter(
+                Q(parent_warehouse=parent_warehouse) | Q(id=parent_warehouse.id)
+            )
         else:
             self.fields['parent_warehouse'].queryset = Warehouse.objects.all()  # Если нет подскладов
 

@@ -1,12 +1,30 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Скоро...</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <title>Система инвентаризации</title>
 </head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header_inner">
+                <div class="header_logo">{Craft~Code}</div>
+                
+                <nav class="nav">
+                    <a class="nav_link" href="{% url 'index' %}">О нас</a>
+                    <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
+                    <a class="nav_link" href="{% url 'StoreHouse:inventory' %}">Инвентарь</a>
+                    <a class="nav_link" href="{% url 'StoreHouse:action_log' %}">Журнал действий</a>
+                    <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
+                </nav>
+            </div>
+        </div>
+    </header>
 <body>
     <img src="{% static 'images/H4NLji8Z5cE.jpg' %}" alt="yeah">    
 </body>

@@ -15,4 +15,5 @@ urlpatterns = [
     path('inventory/<int:warehouse_id>/', views.inventory, name='inventory_by_warehouse'),
     path('items/<str:serial_number>/', views.ItemBySerialNumber.as_view()),
     path('items/<str:serial_number>/update-warehouse/', UpdateItemWarehouse.as_view(),name='update_item_warehouse'),
+    path('action_log/', views.action_log,name='action_log'),
 ]

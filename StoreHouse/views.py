@@ -60,7 +60,7 @@ def create_warehouse(request, warehouse_id):
             warehouse = form.save(commit=False)
             warehouse.company = request.user.company
             warehouse.save()
-            return redirect(reverse('StoreHouse:inventory_by_warehouse', warehouse_id = warehouse_id))
+            return redirect('StoreHouse:inventory_by_warehouse', warehouse_id = warehouse_id)
     else:
         form = WarehouseForm(parent_warehouse=parent_warehouse)
     return render(request, 'StoreHouse/create_warehouse.html', {'form' : form})
@@ -167,6 +167,6 @@ def move_item(request):
 
     return render(request, 'move_item.html', {'form': form})
 
-def item_movement_log(request):
+def action_log(request):
     movements = ItemMovement.objects.filter(item__warehouse__company=request.user.company).order_by('-timestamp')
-    return render(request, 'movement_log.html', {'movements': movements})
+    return render(request, 'StoreHouse/action_log.html', {'movements': movements})

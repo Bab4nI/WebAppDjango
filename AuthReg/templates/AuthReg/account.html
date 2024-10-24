@@ -26,6 +26,7 @@
                         <a class="nav_link" href="{% url 'index' %}">О нас</a>
                         <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
                         <a class="nav_link" href="{% url 'StoreHouse:inventory' %}">Инвентарь</a>
+                        <a class="nav_link" href="{% url 'StoreHouse:action_log' %}">Журнал действий</a>
                         <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
                     </nav>
                 </div>
@@ -38,7 +39,6 @@
             <ul>
                 <li onclick="showContent('about')">О себе</li>
                 <li onclick="showContent('company')">Данные компании</li>
-                <li onclick="showContent('activity')">Журнал действий</li>
                 <li onclick="showContent('request')">Заявка на проведение инвентаризации</li>
             </ul>
         </aside>
@@ -119,35 +119,6 @@
                 
             </div>
 
-            <div id="activity" class="content-section">
-                <h2>Журнал действий</h2>
-                <table>
-                    <thead>
-                        <th>№</th>
-                        <th>Наименование товара</th>
-                        <th>Местонахождение</th>
-                        <th>Дата</th>
-                        <th>Время</th>
-                        <th>Ответственное лицо</th>
-                    </thead>
-                    <tbody id="tableBody">
-                        {% for warehouse in warehouses %} 
-                            <tr>
-                                <td>{{ warehouse.serial_number }}</td>
-                                <td>{{ warehouse.name }}</td>
-                                <td>{{ warehouse.location }}</td>
-                                <td>{{ warehouse.date }}</td>
-                                <td>{{ warehouse.time }}</td>
-                                <td>{{ warehouse.responsible_employee }}</td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="6">No products found.</td>
-                            </tr>
-                        {% endfor %} 
-                    </tbody>
-                </table>
-            </div>
         </section>
     </div>
 
