@@ -110,7 +110,7 @@
                 <h2>Склады</h2>
                 <ul> 
                     {% for warehouse in warehouses %}
-                    <li>{{ warehouse.name }} (Заполненность: {{ warehouse.fullness }}%)</li>
+                    <li>{{ warehouse.name }}</li>
                     {% empty %}
                     <li>Складов нет.</li>
                     {% endfor %}

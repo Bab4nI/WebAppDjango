@@ -10,8 +10,6 @@ urlpatterns = [
     path('accounts/', include(('AuthReg.urls', 'AuthReg'), namespace = 'AuthReg')),
     path('stock/', include(('StoreHouse.urls', 'StoreHouse'), namespace='StoreHouse')),
     path('company/', views.company, name = 'company'),
-
-
     path('api/', include('InventoryRequests.urls')),
     path('support/', views.support, name = 'support'),
     path('app_link/', views.app_link, name = 'app_link'),

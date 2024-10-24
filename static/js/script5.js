@@ -1,24 +1,25 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value; // Получаем CSRF-токен из шаблона
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value; // Получаем CSRF-токен
 
-    // Привязка события к кнопкам удаления
-    document.querySelectorAll('.deleteRecord').forEach(button => {
-        button.addEventListener('click', function () {
-            const itemId = this.getAttribute('data-item-id'); // Получаем корректный ID элемента
-            const confirmationPopup = document.getElementById('deleteConfirmation');
-            
-            if (confirmationPopup) {
-                confirmationPopup.style.display = 'block';
+    function bindDeleteButtons(selector, fetchUrlTemplate, confirmButtonId, cancelButtonId, popupId) {
+        document.querySelectorAll(selector).forEach(button => {
+            button.addEventListener('click', function () {
+                const itemId = this.getAttribute('data-item-id') || this.getAttribute('data-warehouse-id'); // Получаем ID элемента
+                const confirmationPopup = document.getElementById(popupId);
+                
+                if (confirmationPopup && itemId) {
+                    confirmationPopup.style.display = 'flex';
 
-                // Привязываем обработчик к кнопке подтверждения "Да"
-                const confirmDeleteButton = document.getElementById('confirmDeleteButton');
-                confirmDeleteButton.onclick = function () {
-                    if (itemId) {
-                        fetch(`/stock/item/${itemId}/delete/`, { // абсолютный путь
-                            method: 'DELETE',
+                    // Привязываем обработчик к кнопке подтверждения удаления
+                    const confirmDeleteButton = document.getElementById(confirmButtonId);
+                    confirmDeleteButton.onclick = function () {
+                        fetch(fetchUrlTemplate.replace('{id}', itemId), {
+                            method: 'DELETE', // Изменено на POST
                             headers: {
-                                'X-CSRFToken': csrfToken, // используем загруженный токен
+                                'X-CSRFToken': csrfToken,
+                                'Content-Type': 'application/json',
                             },
+                            body: JSON.stringify({ action: 'delete' })
                         })
                         .then(response => {
                             if (response.ok) {
@@ -29,20 +30,22 @@ document.addEventListener('DOMContentLoaded', function () {
                         })
                         .catch(error => console.error('Ошибка запроса:', error));
 
-                        confirmationPopup.style.display = 'none';
-                    } else {
-                        console.error('ID элемента не был получен.');
-                    }
-                };
+                        confirmationPopup.style.display = 'none'; // Закрываем окно подтверждения
+                    };
 
-                // Кнопка "Нет" просто закрывает popup
-                const cancelDeleteButton = document.getElementById('cancelDeleteButton');
-                cancelDeleteButton.onclick = function () {
-                    confirmationPopup.style.display = 'none';
-                };
-            } else {
-                console.error("Всплывающее окно подтверждения удаления не найдено.");
-            }
+                    // Привязываем обработчик к кнопке "Нет", чтобы закрыть popup
+                    const cancelDeleteButton = document.getElementById(cancelButtonId);
+                    cancelDeleteButton.onclick = function () {
+                        confirmationPopup.style.display = 'none'; // Закрываем окно подтверждения
+                    };
+                } else {
+                    console.error("Ошибка: Окно подтверждения или ID элемента не найден.");
+                }
+            });
         });
-    });
+    }
+
+    // Привязываем обработчики к кнопкам удаления предметов и складов
+    bindDeleteButtons('.deleteRecord', '/stock/item/{id}/delete/', 'confirmDeleteItemButton', 'cancelDeleteItemButton', 'deleteConfirmation');
+    bindDeleteButtons('.WarehouseDeleteRecord', '/stock/warehouse/{id}/delete/', 'confirmDeleteWarehouseButton', 'cancelDeleteWarehouseButton', 'WarehouseDeleteConfirmation');
 });

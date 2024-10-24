@@ -11,8 +11,8 @@ from django.urls import reverse
 from django.http import JsonResponse, HttpResponseNotAllowed
 from django.views import View
 
-def edit_item(request, item_id):
-    item = get_object_or_404(Item, id=item_id)
+def edit_item(request, warehouse_id, item_to_edit):
+    item = get_object_or_404(Item, id=item_to_edit)
     warehouses = Warehouse.objects.filter(company=request.user.company)
 
     if request.method == 'POST':
@@ -23,23 +23,26 @@ def edit_item(request, item_id):
             if not item.serial_number:  # Если serial_number еще не был задан
                 item.serial_number = item.generate_serial_number()
             item.save()
-            return redirect('StoreHouse:inventory')
+            return redirect('StoreHouse:inventory_by_warehouse', warehouse_id=warehouse_id)
     else:
         form = ItemForm(instance=item)
 
     return render(request, 'StoreHouse/edit_item.html', {'form': form, 'item': item, 'warehouses': warehouses})
 
-def create_item(request):
+def create_item(request, warehouse_id):
+    parent_warehouse = get_object_or_404(Warehouse, id=warehouse_id)
+
     if request.method == 'POST':
-        form = ItemForm(request.POST)
+        form = ItemForm(request.POST, parent_warehouse=parent_warehouse)
         if form.is_valid():
-            item = form.save(commit = False)
-            item.serial_number = item.generate_serial_number()
+            item = form.save(commit=False)
+            item.company = request.user.company  # Привязка к компании
             item.save()
-            return redirect('StoreHouse:item_list')
+            return redirect('StoreHouse:inventory_by_warehouse', warehouse_id=warehouse_id)
     else:
-        form = ItemForm()
-    return render(request, 'StoreHouse/create_item.html', {'form': form})
+        form = ItemForm(parent_warehouse=parent_warehouse)
+
+    return render(request, 'StoreHouse/create_item.html', {'form': form, 'parent_warehouse': parent_warehouse})
 
 def delete_item(request, item_id):
     if request.method == 'DELETE':
@@ -48,45 +51,67 @@ def delete_item(request, item_id):
         return JsonResponse({'message': 'Item deleted successfully'}, status=200)
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-def create_warehouse(request):
+def create_warehouse(request, warehouse_id):
+    parent_warehouse = get_object_or_404(Warehouse, id=warehouse_id)
+
     if request.method == 'POST':
         form = WarehouseForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect(reverse('StoreHouse:warehouse_list'))
+            warehouse = form.save(commit=False)
+            warehouse.company = request.user.company
+            warehouse.save()
+            return redirect(reverse('StoreHouse:inventory_by_warehouse', warehouse_id = warehouse_id))
     else:
-        form = WarehouseForm()
+        form = WarehouseForm(parent_warehouse=parent_warehouse)
     return render(request, 'StoreHouse/create_warehouse.html', {'form' : form})
 
-def delete_warehouse(request, warehouse_id):
-    warehouse = get_object_or_404(Warehouse, id=warehouse_id, company=request.user.company)
+def edit_warehouse(request, warehouse_id, warehouse_to_edit):
+    warehouse = get_object_or_404(Warehouse, id=warehouse_to_edit)
+    warehouses = Warehouse.objects.filter(company=request.user.company)
+
     if request.method == 'POST':
+        form = WarehouseForm(request.POST, instance=warehouse)
+        if form.is_valid():
+            warehouse = form.save(commit=False)
+            warehouse.save()
+            return redirect('StoreHouse:inventory_by_warehouse', warehouse_id=warehouse_id)
+    else:
+        form = WarehouseForm(instance = warehouse)
+
+    return render(request, 'StoreHouse/edit_warehouse.html', {'form': form, 'warehouse': warehouse, 'warehouses': warehouses })
+
+
+def delete_warehouse(request, warehouse_id):
+    if request.method == 'DELETE':
+        warehouse = get_object_or_404(Warehouse, id=warehouse_id)
         warehouse.delete()
-        return redirect(reverse('AuthReg:account'))
+        return JsonResponse({'message': 'Item deleted successfully'}, status=200)
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-    return render(request, 'StoreHouse/confirm_delete_warehouse.html', {'warehouse': warehouse})
-
-def inventory(request):
+def inventory(request, warehouse_id=None):
     if request.user.is_authenticated:
         user = request.user
         company = user.company
 
         if company:
-            employees = company.employees.all()
             warehouses = company.warehouses.all()
-            items = company.items.all()
+            if warehouse_id:
+                selected_warehouse = get_object_or_404(Warehouse, id=warehouse_id, company=company)
+            else:
+                selected_warehouse = warehouses.first()
+            sub_warehouses = selected_warehouse.sub_warehouses.all()
             context = {
                 'company': company,
-                'employees': employees,
+                'sub_warehouses': sub_warehouses,
                 'warehouses': warehouses,
-                'items': items,
+                'selected_warehouse': selected_warehouse,
             }
         else:
             context = {
                 'company': None,
-                'employees': [],
+                'sub_warehouses': [],
                 'warehouses': [],
-                'items': [],
+                'selected_warehouse': [],
             }
 
         context.update({        #.update() для словарей - это +=

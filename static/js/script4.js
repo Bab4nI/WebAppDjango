@@ -35,60 +35,62 @@ function validateForm() {
     doneButton.disabled = !allFilled;
 }
 
-document.getElementById("addRecord").onclick = function() {
-    openPopup(`
-        <h3>Добавить запись</h3>
-        <p>Введите данные:</p>
-        <input type="text" id="serialNumber" placeholder="ID записи" class="input-field"><br>
-        <input type="text" id="name" placeholder="Название" class="input-field"><br>
-        <input type="text" id="location" placeholder="Местоположение" class="input-field"><br>
-        <input type="text" id="responsibleEmployee" placeholder="Сотрудник" class="input-field"><br><br>
-    `);
 
-    // Добавляем валидацию полей
-    const inputs = document.querySelectorAll("#popupInnerContent .input-field");
-    inputs.forEach(input => {
-        input.addEventListener("input", validateForm);
-    });
 
-    // Сброс состояния кнопки "Готово"
-    doneButton.disabled = true;
+// document.getElementById("addRecord").onclick = function() {
+//     openPopup(`
+//         <h3>Добавить запись</h3>
+//         <p>Введите данные:</p>
+//         <input type="text" id="serialNumber" placeholder="ID записи" class="input-field"><br>
+//         <input type="text" id="name" placeholder="Название" class="input-field"><br>
+//         <input type="text" id="location" placeholder="Местоположение" class="input-field"><br>
+//         <input type="text" id="responsibleEmployee" placeholder="Сотрудник" class="input-field"><br><br>
+//     `);
 
-    doneButton.onclick = function() {
-        const serialNumber = document.getElementById("serialNumber").value; 
-        const name = document.getElementById("name").value;
-        const location = document.getElementById("location").value;
-        const responsibleEmployee = document.getElementById("responsibleEmployee").value;
+//     // Добавляем валидацию полей
+//     const inputs = document.querySelectorAll("#popupInnerContent .input-field");
+//     inputs.forEach(input => {
+//         input.addEventListener("input", validateForm);
+//     });
+
+//     // Сброс состояния кнопки "Готово"
+//     doneButton.disabled = true;
+
+//     doneButton.onclick = function() {
+//         const serialNumber = document.getElementById("serialNumber").value; 
+//         const name = document.getElementById("name").value;
+//         const location = document.getElementById("location").value;
+//         const responsibleEmployee = document.getElementById("responsibleEmployee").value;
     
-        // Подготовка данных для отправки
-        const data = {
-            serialNumber: serialNumber,
-            name: name,
-            location: location,
-            responsibleEmployee: responsibleEmployee
-        };
+//         // Подготовка данных для отправки
+//         const data = {
+//             serialNumber: serialNumber,
+//             name: name,
+//             location: location,
+//             responsibleEmployee: responsibleEmployee
+//         };
     
-        // Отправка данных на сервер с использованием fetch
-        fetch("/save-record", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log("Данные успешно отправлены:", result);
-            // Закрытие всплывающего окна после отправки данных
-            popup.style.display = "none";
-        })
-        .catch(error => {
-            console.error("Ошибка при отправке данных:", error);
-        });
+//         // Отправка данных на сервер с использованием fetch
+//         fetch("/save-record", {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json"
+//             },
+//             body: JSON.stringify(data)
+//         })
+//         .then(response => response.json())
+//         .then(result => {
+//             console.log("Данные успешно отправлены:", result);
+//             // Закрытие всплывающего окна после отправки данных
+//             popup.style.display = "none";
+//         })
+//         .catch(error => {
+//             console.error("Ошибка при отправке данных:", error);
+//         });
     
-        popup.style.display = "none";
-    };
-};
+//         popup.style.display = "none";
+//     };
+// };
 
 
 
@@ -148,93 +150,93 @@ document.getElementById("addRecord").onclick = function() {
 
 
 
-document.getElementById("deleteRecord").onclick = function() {
-    openPopup('<h3>Удалить запись</h3><p>Введите ID записи для удаления:</p><input type="text" id="serialNumber" placeholder="ID записи" class="input-field"><br><br>');
+// document.getElementById("deleteRecord").onclick = function() {
+//     openPopup('<h3>Удалить запись</h3><p>Введите ID записи для удаления:</p><input type="text" id="serialNumber" placeholder="ID записи" class="input-field"><br><br>');
 
-    // Добавляем валидацию полей
-    const inputs = document.querySelectorAll("#popupInnerContent .input-field");
-    inputs.forEach(input => {
-        input.addEventListener("input", validateForm);
-    });
+//     // Добавляем валидацию полей
+//     const inputs = document.querySelectorAll("#popupInnerContent .input-field");
+//     inputs.forEach(input => {
+//         input.addEventListener("input", validateForm);
+//     });
 
-    // Сброс состояния кнопки "Готово"
-    doneButton.disabled = true;
+//     // Сброс состояния кнопки "Готово"
+//     doneButton.disabled = true;
 
-    // Обработка нажатия на кнопку "Готово"
-    doneButton.onclick = function() {
-        const serialNumber = document.getElementById("serialNumber").value;
+//     // Обработка нажатия на кнопку "Готово"
+//     doneButton.onclick = function() {
+//         const serialNumber = document.getElementById("serialNumber").value;
 
-        // Отправка данных на сервер с использованием fetch для изменения записи
-        fetch(`/api/deleteRecord/${serialNumber}`, {
-            method: "DELETE",
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Запись успешно удалена');
-                closePopup(); // Закрыть окно после успешного удаления
-            } else {
-                alert('Ошибка при удалении записи');
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка:', error);
-        });
+//         // Отправка данных на сервер с использованием fetch для изменения записи
+//         fetch(`/api/deleteRecord/${serialNumber}`, {
+//             method: "DELETE",
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.success) {
+//                 alert('Запись успешно удалена');
+//                 closePopup(); // Закрыть окно после успешного удаления
+//             } else {
+//                 alert('Ошибка при удалении записи');
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Ошибка:', error);
+//         });
 
-        popup.style.display = "none";
-    };
-};
+//         popup.style.display = "none";
+//     };
+// };
 
-document.getElementById("addWarehouse").onclick = function() {
-    openPopup(`
-        <h3>Добавить склад</h3>
-        <p>Введите данные склада:</p>
-        <input type="text" id="warehouseId" placeholder="ID склада" class="input-field"><br>
-        <input type="text" id="warehouseName" placeholder="Название склада" class="input-field"><br><br>
-    `);
+// document.getElementById("addWarehouse").onclick = function() {
+//     openPopup(`
+//         <h3>Добавить склад</h3>
+//         <p>Введите данные склада:</p>
+//         <input type="text" id="warehouseId" placeholder="ID склада" class="input-field"><br>
+//         <input type="text" id="warehouseName" placeholder="Название склада" class="input-field"><br><br>
+//     `);
 
-    // Добавляем валидацию полей
-    const inputs = document.querySelectorAll("#popupInnerContent .input-field");
-    inputs.forEach(input => {
-        input.addEventListener("input", validateForm);
-    });
+//     // Добавляем валидацию полей
+//     const inputs = document.querySelectorAll("#popupInnerContent .input-field");
+//     inputs.forEach(input => {
+//         input.addEventListener("input", validateForm);
+//     });
 
-    // Сброс состояния кнопки "Готово"
-    doneButton.disabled = true;
+//     // Сброс состояния кнопки "Готово"
+//     doneButton.disabled = true;
 
-    doneButton.onclick = function() {
-        const warehouseId = document.getElementById("warehouseId").value; 
-        const warehouseName = document.getElementById("warehouseName").value;
+//     doneButton.onclick = function() {
+//         const warehouseId = document.getElementById("warehouseId").value; 
+//         const warehouseName = document.getElementById("warehouseName").value;
 
-        // Подготовка данных для отправки
-        const data = {
-            warehouseId: warehouseId,
-            warehouseName: warehouseName,
-        };
+//         // Подготовка данных для отправки
+//         const data = {
+//             warehouseId: warehouseId,
+//             warehouseName: warehouseName,
+//         };
     
-        // Отправка данных на сервер с использованием fetch
-        fetch("/save-record", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log("Данные успешно отправлены:", result);
-            // Закрытие всплывающего окна после отправки данных
-            popup.style.display = "none";
-        })
-        .catch(error => {
-            console.error("Ошибка при отправке данных:", error);
-        });
+//         // Отправка данных на сервер с использованием fetch
+//         fetch("/save-record", {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json"
+//             },
+//             body: JSON.stringify(data)
+//         })
+//         .then(response => response.json())
+//         .then(result => {
+//             console.log("Данные успешно отправлены:", result);
+//             // Закрытие всплывающего окна после отправки данных
+//             popup.style.display = "none";
+//         })
+//         .catch(error => {
+//             console.error("Ошибка при отправке данных:", error);
+//         });
     
-        popup.style.display = "none";
-    };
-};
+//         popup.style.display = "none";
+//     };
+// };
 
-// Действие по нажатию на "Изменить склад"
+// // Действие по нажатию на "Изменить склад"
 // document.getElementById("changeWarehouse").onclick = function() {
 //     openPopup(`
 //         <h3>Изменить склад</h3>
@@ -285,85 +287,85 @@ document.getElementById("addWarehouse").onclick = function() {
 //     };
 // };
 
-// Действие по нажатию на "Удалить склад"
-document.getElementById("deleteWarehouse").onclick = function() {
-    openPopup('<h3>Удалить склад</h3><p>Введите ID склада для удаления:</p><input type="text" id="warehouseId" placeholder="ID склада" class="input-field"><br><br>');
+// // Действие по нажатию на "Удалить склад"
+// document.getElementById("deleteWarehouse").onclick = function() {
+//     openPopup('<h3>Удалить склад</h3><p>Введите ID склада для удаления:</p><input type="text" id="warehouseId" placeholder="ID склада" class="input-field"><br><br>');
 
-    const inputs = document.querySelectorAll("#popupInnerContent .input-field");
-    inputs.forEach(input => {
-        input.addEventListener("input", validateForm);
-    });
+//     const inputs = document.querySelectorAll("#popupInnerContent .input-field");
+//     inputs.forEach(input => {
+//         input.addEventListener("input", validateForm);
+//     });
 
-    doneButton.disabled = true;
+//     doneButton.disabled = true;
 
-    doneButton.onclick = function() {
-        const warehouseId = document.getElementById("warehouseId").value;
+//     doneButton.onclick = function() {
+//         const warehouseId = document.getElementById("warehouseId").value;
 
-        // Отправка данных на сервер с использованием fetch для изменения записи
-        fetch(`/api/deleteRecord/${warehouseId}`, {
-            method: "DELETE",
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Запись успешно удалена');
-                closePopup(); // Закрыть окно после успешного удаления
-            } else {
-                alert('Ошибка при удалении записи');
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка:', error);
-        });
+//         // Отправка данных на сервер с использованием fetch для изменения записи
+//         fetch(`/api/deleteRecord/${warehouseId}`, {
+//             method: "DELETE",
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.success) {
+//                 alert('Запись успешно удалена');
+//                 closePopup(); // Закрыть окно после успешного удаления
+//             } else {
+//                 alert('Ошибка при удалении записи');
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Ошибка:', error);
+//         });
 
-        popup.style.display = "none";
-    };
-};
-
-
+//         popup.style.display = "none";
+//     };
+// };
 
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    const warehouseSelect = document.getElementById('warehouseSelect');
-    const tableBody = document.getElementById('tableBody');
 
-    // Обработчик изменения склада
-    warehouseSelect.addEventListener('change', function () {
-        const warehouseId = warehouseSelect.value;
 
-        // AJAX-запрос на сервер для получения данных по выбранному складу
-        fetch(`/get-warehouse-data/${warehouseId}`)
-            .then(response => response.json())
-            .then(data => {
-                // Очищаем таблицу перед обновлением
-                tableBody.innerHTML = '';
+// document.addEventListener('DOMContentLoaded', function () {
+//     const warehouseSelect = document.getElementById('warehouseSelect');
+//     const tableBody = document.getElementById('tableBody');
 
-                if (data.products.length > 0) {
-                    data.products.forEach((product, index) => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${product.qrCode} <button>show qr</button></td>
-                            <td>${product.name}</td>
-                            <td>${product.location}</td>
-                            <td>${product.responsible}</td>
-                        `;
-                        tableBody.appendChild(row);
-                    });
-                } else {
-                    // Если данные не найдены
-                    const noDataRow = document.createElement('tr');
-                    noDataRow.innerHTML = `<td colspan="5">No products found.</td>`;
-                    tableBody.appendChild(noDataRow);
-                }
-            })
-            .catch(error => console.error('Ошибка при получении данных:', error));
-    });
+//     // Обработчик изменения склада
+//     warehouseSelect.addEventListener('change', function () {
+//         const warehouseId = warehouseSelect.value;
 
-    // Инициировать загрузку данных для первого склада по умолчанию
-    warehouseSelect.dispatchEvent(new Event('change'));
-});
+//         // AJAX-запрос на сервер для получения данных по выбранному складу
+//         fetch(`/get-warehouse-data/${warehouseId}`)
+//             .then(response => response.json())
+//             .then(data => {
+//                 // Очищаем таблицу перед обновлением
+//                 tableBody.innerHTML = '';
+
+//                 if (data.products.length > 0) {
+//                     data.products.forEach((product, index) => {
+//                         const row = document.createElement('tr');
+//                         row.innerHTML = `
+//                             <td>${index + 1}</td>
+//                             <td>${product.qrCode} <button>show qr</button></td>
+//                             <td>${product.name}</td>
+//                             <td>${product.location}</td>
+//                             <td>${product.responsible}</td>
+//                         `;
+//                         tableBody.appendChild(row);
+//                     });
+//                 } else {
+//                     // Если данные не найдены
+//                     const noDataRow = document.createElement('tr');
+//                     noDataRow.innerHTML = `<td colspan="5">No products found.</td>`;
+//                     tableBody.appendChild(noDataRow);
+//                 }
+//             })
+//             .catch(error => console.error('Ошибка при получении данных:', error));
+//     });
+
+//     // Инициировать загрузку данных для первого склада по умолчанию
+//     warehouseSelect.dispatchEvent(new Event('change'));
+// });
 
 
 

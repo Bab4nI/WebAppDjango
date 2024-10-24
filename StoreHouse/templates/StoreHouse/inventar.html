@@ -36,10 +36,8 @@
     <div class="dropdown">
         <button class="dropbtn">Опции</button>
         <div class="dropdown-content">
-            <a href="#" id="addRecord">Добавить предмет</a>
-            <a href="#" id="deleteRecord">Удалить предмет</a>
-            <a href="#" id="addWarehouse">Добавить склад</a>
-            <a href="#" id="deleteWarehouse">Удалить склад</a>
+            <a href="{% url 'StoreHouse:create_item' selected_warehouse.id %}">Добавить предмет</a>
+            <a href="{% url 'StoreHouse:create_warehouse' selected_warehouse.id %}">Создать склад</a>      
         </div>
     </div>
 
@@ -51,59 +49,90 @@
         </div>
     </div>
 
-    <label for="warehouseSelect">Выберите склад:</label>
-    <select id="warehouseSelect">
-        {% for warehouse in warehouses %}
-            <option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
-        {% endfor %}
-    </select>
+    <div class="dropdown">
+        <button class="dropbtn">{{ selected_warehouse }} </button>
+        <div class="dropdown-content">
+            {% for warehouse in warehouses %}
+                {% if warehouse.id != selected_warehouse.id %}
+                    <a href="{% url 'StoreHouse:inventory_by_warehouse' warehouse.id %}">
+                        {{ warehouse.name }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 
     <table>
-        <thead>
-            <tr>
-                <th>№</th>
-                <th>Наименование товара</th>
-                <th>Местонахождение</th>
-                <th>Ответственное лицо</th>
-                <th>Опции</th>
-            </tr>
-        </thead>
+        
         <tbody id="tableBody">
-            {% for item in items %} 
+            {% for warehouse in sub_warehouses %}
+            <thead>
                 <tr>
-                    <td>
-                        {{ item.serial_number }} <br>
-                        <button class="qr-btn" data-qrcode="{{ item.qr_code.url }}">Показать QR</button>
-                    </td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.warehouse.name }}</td>
-                    <td>{{ item.responsible_employee }}</td>
-                    <td>
-                        <a href="{% url 'StoreHouse:edit_item' item.id %}">Изменить</a>
-                        <button class="deleteRecord" data-item-id="{{ item.id }}">Удалить</button>
-                    </td>
+                    <th>Склад
+                        <div class="dropdown">
+                            <button class="dropbtn">{{ warehouse.name }}</button>
+                            <div class="dropdown-content">
+                                <a href="{% url 'StoreHouse:edit_warehouse' selected_warehouse.id warehouse.id %}">Редактировать</a>
+                                <button class="WarehouseDeleteRecord" data-warehouse-id="{{ warehouse.id }}">Удалить</button>      
+                            </div>
+                        </div>
+                    </th>
+                    <th>Наименование товара</th>
+                    <th>Местонахождение</th>
+                    <th>Ответственное лицо</th>
+                    <th>Опции</th>
                 </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="4">Нет предметов.</td>
-                </tr>
+            </thead>
+                {% for item in warehouse.items.all %} 
+                    <tr>
+                        <td>
+                            {{ item.serial_number }} <br>
+                            <button class="qr-btn" data-qrcode="{{ item.qr_code.url }}">Показать QR</button>
+                        </td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.warehouse.name }}</td>
+                        <td>{{ item.responsible_employee }}</td>
+                        <td>
+                            <a href="{% url 'StoreHouse:edit_item' selected_warehouse.id item.id %}">Изменить</a>
+                            <button class="deleteRecord" data-item-id="{{ item.id }}">Удалить</button>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">Нет предметов.</td>
+                    </tr>
+                {% endfor %}
             {% endfor %} 
         </tbody>
     </table>
+
     
     <div id="qrPopup" class="qr-popup" style="display:none;">
         <img id="qrCode" src="" alt="QR-код">
         <button id="closeQrPopup">Закрыть</button>
     </div>
 
+    <!-- Всплывающее окно для удаления предмета -->
     <div id="deleteConfirmation" class="popup" style="display:none;">
         <div class="popup-content">
             {% csrf_token %}
             <p>Вы уверены, что хотите удалить этот элемент?</p>
-            <button id="confirmDeleteButton">Да</button>
-            <button id="cancelDeleteButton">Нет</button>
+            <button id="confirmDeleteItemButton">Да</button>
+            <button id="cancelDeleteItemButton">Нет</button>
         </div>
-    </div>    
+    </div>
+
+    
+    <!-- Всплывающее окно для удаления склада -->
+    <div id="WarehouseDeleteConfirmation" class="popup" style="display:none;">
+        <div class="popup-content">
+            {% csrf_token %}
+            <p>Вы уверены, что хотите удалить этот склад?</p>
+            <button id="confirmDeleteWarehouseButton">Да</button>
+            <button id="cancelDeleteWarehouseButton">Нет</button>
+        </div>
+    </div>
+
 
     <script src="{% static 'js/script4.js' %}"></script>
     <script src="{% static 'js/script5.js' %}"></script>

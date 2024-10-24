@@ -26,7 +26,6 @@ class Warehouse(models.Model):
     def is_root(self):
         """Проверка, является ли склад корневым"""
         return self.parent_warehouse is None
-        
 
 class Item(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='items')
