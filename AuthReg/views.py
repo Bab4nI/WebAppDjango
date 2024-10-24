@@ -146,7 +146,7 @@ def account(request):
                 'warehouses': [],
                 'items': [],
             }
-
+            
         context = {**User_context, **Inventory_context}
         return render(request, 'AuthReg/account.html', context)
 
@@ -167,7 +167,7 @@ class UserLoginAPI(APIView):
             user = authenticate(request, email=email, password=password)
 
             if user is not None:
-                auth_login(request)  #
+                auth_login(request) 
                 return Response({
                     "message": "Успешный вход",
                     "user_id": user.id,

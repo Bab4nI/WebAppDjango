@@ -118,35 +118,35 @@
                 <a href="{% url 'AuthReg:invite' %}">Добавить сотрудника</a>
                 
             </div>
-
+            
+            <div id="request" class="content-section">
+                <h2>Создать заявку</h2>
+                <br>
+                <label for="employeesSelect">Выберите сотрудника, которому хотите назначить заявку:</label>
+                {{ form.employee }}
+                <select id="employeesSelect">
+                    {% for employee in employees %}
+                        <option value="{{ employee.name }}">{{ employee.name }}</option>
+                    {% endfor %} 
+                </select>
+                <br><br>
+                <label for="warehouseSelect">Выберите кабинет/отдел, в котором необходимо провести инвентаризацию:</label>
+                <select id="warehouseSelect">
+                    {% for warehouse in warehouses %}
+                        <option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
+                    {% endfor %}
+                </select> <!-- можно тупо сделать варианты в виде "склад1 подсклад1", "склад1 подсклад2", "склад1 подсклад3" и тд. чтобы не было двойных выборов: сначала склад, затем уже в нем подсклад--> 
+                <br><br>
+                <label for="timeSelect">Напишите срок загрузки отчёта:</label>
+                {{ form.deadline }}
+                <input type="datetime-local" id="deadline" name="deadline">
+                <br><br>
+                <button id="submitRequest">Назначить инвентаризацию</button>
+            </div>
         </section>
     </div>
 
-    <div id="request" class="content-section">
-        <h2>Создать заявку</h2>
-        <br>
-        <label for="employeesSelect">Выберите сотрудника, которому хотите назначить заявку:</label>
-        {{ form.employee }}
-        <!-- <select id="employeesSelect">
-            {% for employee in employees %}
-                <option value="{{ employee.name }}">{{ employee.name }}</option>
-            {% endfor %} 
-        </select>-->
-        <br><br>
-        <label for="warehouseSelect">Выберите кабинет/отдел, в котором необходимо провести инвентаризацию:</label>
-        {{ form.warehouse }}
-        <!-- <select id="warehouseSelect">
-            {% for warehouse in warehouses %}
-                <option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
-            {% endfor %}
-        </select> <!-- можно тупо сделать варианты в виде "склад1 подсклад1", "склад1 подсклад2", "склад1 подсклад3" и тд. чтобы не было двойных выборов: сначала склад, затем уже в нем подсклад--> 
-        <br><br>
-        <label for="timeSelect">Напишите срок загрузки отчёта:</label>
-        {{ form.deadline }}
-        <!-- <input type="datetime-local" id="deadline" name="deadline"> -->
-        <br><br>
-        <button id="submitRequest">Назначить инвентаризацию</button>
-    </div>
+    
 
     <script src="{% static 'js/script3.js' %}"> </script>
 </body>
