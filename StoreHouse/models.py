@@ -72,12 +72,16 @@ class Item(models.Model):
 
             # Записываем событие создания в историю
             ItemHistory.objects.create(
-                item=self,
-                action_type='created',  # Указываем, что это создание
+                company = self.company,
+                item_name=str(self.name),
+                warehouse_name = str(self.warehouse.name),
+                responsible_employee_surname = str(self.responsible_employee.surname),
+                responsible_employee_name = str(self.responsible_employee.name),
+                responsible_employee_email = str(self.responsible_employee.email),
+                action_type='created',  # Указываем, что это удаление
                 field_name="Создано",
-                old_value=None,  # До создания объекта не было
-                new_value=str(self),  # Текущее состояние объекта как строка
-                changed_by=self.responsible_employee  # Или другой механизм определения "кто создал"
+                old_value=str(self),  # Сохраняем текущее состояние объекта перед удалением
+            new_value=None,  # После удаления объекта уже нет
             )
 
         # Генерируем серийный номер, если он еще не создан
@@ -108,12 +112,16 @@ class Item(models.Model):
             # Если есть изменения, сохраняем запись в историю
             if has_changes:
                 ItemHistory.objects.create(
-                    item=self,
-                    action_type='updated',  # Указываем, что это изменение
+                    company = self.company,
+                    item_name=str(self.name),
+                    warehouse_name = str(self.warehouse.name),
+                    responsible_employee_surname = str(self.responsible_employee.surname),
+                    responsible_employee_name = str(self.responsible_employee.name),
+                    responsible_employee_email = str(self.responsible_employee.email),
+                    action_type='changed',  # Указываем, что это удаление
                     field_name="Изменено",
-                    old_value="N/A",  # Опционально: если не нужно указывать старое значение
-                    new_value=str(self),  # Сохраняем текущее состояние объекта как строку
-                    changed_by=self.responsible_employee  # Указываем, кто сделал изменение
+                    old_value=str(self),  # Сохраняем текущее состояние объекта перед удалением
+                    new_value=None,  # После удаления объекта уже нет
                 )
 
         # Сохраняем объект после всех изменений
@@ -122,12 +130,16 @@ class Item(models.Model):
     def delete(self, *args, **kwargs):
         # Перед удалением объекта записываем событие удаления в историю
         ItemHistory.objects.create(
-            item=self,
+            company = self.company,
+            item_name=str(self.name),
+            warehouse_name = str(self.warehouse.name),
+            responsible_employee_surname = str(self.responsible_employee.surname),
+            responsible_employee_name = str(self.responsible_employee.name),
+            responsible_employee_email = str(self.responsible_employee.email),
             action_type='deleted',  # Указываем, что это удаление
             field_name="Удалено",
             old_value=str(self),  # Сохраняем текущее состояние объекта перед удалением
             new_value=None,  # После удаления объекта уже нет
-            changed_by=self.responsible_employee  # Указываем, кто удалил объект
         )
 
         # Затем выполняем реальное удаление объекта
@@ -145,11 +157,15 @@ class ItemHistory(models.Model):
         ('deleted', 'Удалено'),
     ]
 
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='actions')
+    item_name = models.CharField(max_length=200)
+    warehouse_name = models.CharField(max_length=200)
+    responsible_employee_surname = models.CharField(max_length=200)
+    responsible_employee_name = models.CharField(max_length=200)
+    responsible_employee_email = models.CharField(max_length=200)
     field_name = models.CharField(max_length=200, null=True, blank=True)
     old_value = models.TextField(null=True, blank=True)
     new_value = models.TextField(null=True, blank=True)
-    changed_by = models.ForeignKey('AuthReg.User', on_delete=models.SET_NULL, null=True)
     changed_at = models.DateTimeField(auto_now_add=True)
 
     # Новое поле для хранения типа действия (создание, изменение, удаление)

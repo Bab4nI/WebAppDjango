@@ -96,13 +96,22 @@ def inventory(request, warehouse_id=None):
                 selected_warehouse = get_object_or_404(Warehouse, id=warehouse_id, company=company)
             else:
                 selected_warehouse = warehouses.first()
-            sub_warehouses = selected_warehouse.sub_warehouses.all()
-            context = {
-                'company': company,
-                'sub_warehouses': sub_warehouses,
-                'warehouses': warehouses,
-                'selected_warehouse': selected_warehouse,
-            }
+
+            if selected_warehouse:
+                sub_warehouses = selected_warehouse.sub_warehouses.all()
+                context = {
+                    'company': company,
+                    'sub_warehouses': sub_warehouses,
+                    'warehouses': warehouses,
+                    'selected_warehouse': selected_warehouse,
+                }
+            else:
+                context = {
+                'company': None,
+                'sub_warehouses': [],
+                'warehouses': [],
+                'selected_warehouse': [],
+                }
         else:
             context = {
                 'company': None,
@@ -148,7 +157,7 @@ class UpdateItemWarehouse(APIView):  # Изменено название
 
 def action_log(request):
     # Получаем все записи истории, связанные с компанией пользователя
-    history_records = ItemHistory.objects.filter(item__warehouse__company=request.user.company).order_by('-changed_at')
+    history_records = ItemHistory.objects.filter(company=request.user.company).order_by('-changed_at')
     
     # Передаем данные в шаблон
     return render(request, 'StoreHouse/action_log.html', {'history_records': history_records})

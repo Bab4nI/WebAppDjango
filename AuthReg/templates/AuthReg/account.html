@@ -101,7 +101,7 @@
                 <h2>Зарегистрированные сотрудники</h2>
                 <ul>
                     {% for employee in employees %}
-                    <li>{{ employee.surname }} {{ employee.name }} {{ employee.middlename }} {{ employee.role }}</li>
+                    <li>{{ employee.surname }} {{ employee.name }} {{ employee.email }} </li>
                     {% empty %}
                     <li>No employees found</li>
                     {% endfor %}

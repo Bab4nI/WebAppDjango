@@ -53,11 +53,11 @@
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ history.action_type }}</td>
-                        <td>{{ history.item.name }}</td>
-                        <td>{{ history.item.warehouse.name }}</td>
+                        <td>{{ history.item_name }}</td>
+                        <td>{{ history.warehouse_name }}</td>
                         <td>{{ history.changed_at|date:"d.m.Y" }}</td>
                         <td>{{ history.changed_at|time:"H:i:s" }}</td>
-                        <td>{{ history.changed_by.surname }} {{ history.changed_by.name }} {{ history.changed_by.email }}</td>
+                        <td>{{ history.responsible_employee_surname }} {{ history.responsible_employee_name }} {{ history.responsible_employee_email }}</td>
                     </tr>
                 {% empty %}
                     <tr>
