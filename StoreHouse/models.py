@@ -3,7 +3,7 @@ from django.core.files import File
 from io import BytesIO
 from django.conf import settings
 from django.core.files.base import ContentFile #Для QR
-
+from django.utils import timezone
 from django.db import models
 from .utils import *
 from django.contrib.auth import get_user_model
@@ -63,23 +63,98 @@ class Item(models.Model):
         buf.close()
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            super(Item, self).save(*args, **kwargs) 
+        # Определяем, новый ли это объект
+        is_new = self.pk is None
 
+        # Первое сохранение, если объект новый, чтобы получить ID
+        if is_new:
+            super(Item, self).save(*args, **kwargs)  # Первое сохранение
+
+            # Записываем событие создания в историю
+            ItemHistory.objects.create(
+                item=self,
+                action_type='created',  # Указываем, что это создание
+                field_name="Создано",
+                old_value=None,  # До создания объекта не было
+                new_value=str(self),  # Текущее состояние объекта как строка
+                changed_by=self.responsible_employee  # Или другой механизм определения "кто создал"
+            )
+
+        # Генерируем серийный номер, если он еще не создан
         if not self.serial_number:
             self.serial_number = self.generate_serial_number()
 
-        self.generate_qr_code(self.serial_number)
+        # Генерация QR-кода, если серийный номер был создан
+        if self.serial_number:
+            self.generate_qr_code(self.serial_number)
 
-        super(Item, self).save(*args, **kwargs) 
+        # Проверяем изменения только если объект уже существует
+        if not is_new:
+            # Получаем старое состояние объекта из базы данных перед изменением
+            old_item = Item.objects.get(pk=self.pk)
+            # Проверяем, изменилось ли хотя бы одно поле
+            has_changes = False
+
+            for field in self._meta.fields:
+                field_name = field.name
+                old_value = getattr(old_item, field_name)
+                new_value = getattr(self, field_name)
+
+                # Если хотя бы одно поле изменилось, отмечаем это
+                if old_value != new_value:
+                    has_changes = True
+                    break  # Выходим из цикла, как только нашли изменения
+
+            # Если есть изменения, сохраняем запись в историю
+            if has_changes:
+                ItemHistory.objects.create(
+                    item=self,
+                    action_type='updated',  # Указываем, что это изменение
+                    field_name="Изменено",
+                    old_value="N/A",  # Опционально: если не нужно указывать старое значение
+                    new_value=str(self),  # Сохраняем текущее состояние объекта как строку
+                    changed_by=self.responsible_employee  # Указываем, кто сделал изменение
+                )
+
+        # Сохраняем объект после всех изменений
+        super(Item, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # Перед удалением объекта записываем событие удаления в историю
+        ItemHistory.objects.create(
+            item=self,
+            action_type='deleted',  # Указываем, что это удаление
+            field_name="Удалено",
+            old_value=str(self),  # Сохраняем текущее состояние объекта перед удалением
+            new_value=None,  # После удаления объекта уже нет
+            changed_by=self.responsible_employee  # Указываем, кто удалил объект
+        )
+
+        # Затем выполняем реальное удаление объекта
+        super(Item, self).delete(*args, **kwargs)
+
+
     def __str__(self):
         return f"{self.name} (Серийный номер: {self.serial_number})"
     
-class ItemMovement(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="movements")
-    from_warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name="moved_from")
-    to_warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name="moved_to")
-    timestamp = models.DateTimeField(auto_now_add=True)
-    new_description = models.TextField(blank=True, null=True)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE) 
+    
+class ItemHistory(models.Model):
+    ACTION_CHOICES = [
+        ('created', 'Создано'),
+        ('updated', 'Изменено'),
+        ('deleted', 'Удалено'),
+    ]
+
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    field_name = models.CharField(max_length=200, null=True, blank=True)
+    old_value = models.TextField(null=True, blank=True)
+    new_value = models.TextField(null=True, blank=True)
+    changed_by = models.ForeignKey('AuthReg.User', on_delete=models.SET_NULL, null=True)
+    changed_at = models.DateTimeField(auto_now_add=True)
+
+    # Новое поле для хранения типа действия (создание, изменение, удаление)
+    action_type = models.CharField(max_length=10, choices=ACTION_CHOICES, default='updated')
+
+    def __str__(self):
+        return f"{self.get_action_type_display()} — {self.item} ({self.changed_at})"
     

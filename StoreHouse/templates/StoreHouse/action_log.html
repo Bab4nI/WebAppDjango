@@ -34,32 +34,36 @@
         </header>
     </div>
 
-<div id="activity" class="content-section">
-    <h2>Журнал действий</h2>
-    <table>
-        <thead>
-            <th>№</th>
-            <th>Наименование товара</th>
-            <th>Местонахождение</th>
-            <th>Дата</th>
-            <th>Время</th>
-            <th>Ответственное лицо</th>
-        </thead>
-        <tbody id="tableBody">
-            {% for warehouse in warehouses %} 
+    <div id="activity" class="content-section">
+        <h2>Журнал действий</h2>
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ warehouse.serial_number }}</td>
-                    <td>{{ warehouse.name }}</td>
-                    <td>{{ warehouse.location }}</td>
-                    <td>{{ warehouse.date }}</td>
-                    <td>{{ warehouse.time }}</td>
-                    <td>{{ warehouse.responsible_employee }}</td>
+                    <th>№</th>
+                    <th>Операция</th>
+                    <th>Наименование товара</th>
+                    <th>Местонахождение</th>
+                    <th>Дата</th>
+                    <th>Время</th>
+                    <th>Ответственное лицо</th>
                 </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="6">No products found.</td>
-                </tr>
-            {% endfor %} 
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody id="tableBody">
+                {% for history in history_records %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ history.action_type }}</td>
+                        <td>{{ history.item.name }}</td>
+                        <td>{{ history.item.warehouse.name }}</td>
+                        <td>{{ history.changed_at|date:"d.m.Y" }}</td>
+                        <td>{{ history.changed_at|time:"H:i:s" }}</td>
+                        <td>{{ history.changed_by.surname }} {{ history.changed_by.name }} {{ history.changed_by.email }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6">Журнал чист.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>

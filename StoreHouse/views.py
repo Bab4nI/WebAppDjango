@@ -1,18 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import WarehouseForm, ItemForm, ItemMovementForm
+from .forms import WarehouseForm, ItemForm
 from .models import Warehouse
-from django.contrib.auth import decorators
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Item, ItemMovement
+from .models import Item, ItemHistory
 from .serializers import ItemSerializer, ItemUpdateSerializer
-from django.urls import reverse
-from django.http import JsonResponse, HttpResponseNotAllowed
-from django.views import View
+from django.http import JsonResponse
 
-def edit_item(request, warehouse_id, item_to_edit):
-    item = get_object_or_404(Item, id=item_to_edit)
+def edit_item(request, warehouse_id, item_id):
+    item = get_object_or_404(Item, id=item_id)
     warehouses = Warehouse.objects.filter(company=request.user.company)
 
     if request.method == 'POST':
@@ -148,25 +145,10 @@ class UpdateItemWarehouse(APIView):  # Изменено название
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def move_item(request):
-    if request.method == 'POST':
-        form = ItemMovementForm(request.POST, user=request.user)
-        if form.is_valid():
-            movement = form.save(commit=False)
-            movement.from_warehouse = movement.item.warehouse 
-            movement.user = request.user
-            movement.save()
-
-            movement.item.warehouse = movement.to_warehouse
-            movement.item.description = form.cleaned_data['new_description'] or movement.item.description
-            movement.item.save()
-
-            return redirect('item_movement_log')
-    else:
-        form = ItemMovementForm(user=request.user)
-
-    return render(request, 'move_item.html', {'form': form})
 
 def action_log(request):
-    movements = ItemMovement.objects.filter(item__warehouse__company=request.user.company).order_by('-timestamp')
-    return render(request, 'StoreHouse/action_log.html', {'movements': movements})
+    # Получаем все записи истории, связанные с компанией пользователя
+    history_records = ItemHistory.objects.filter(item__warehouse__company=request.user.company).order_by('-changed_at')
+    
+    # Передаем данные в шаблон
+    return render(request, 'StoreHouse/action_log.html', {'history_records': history_records})
