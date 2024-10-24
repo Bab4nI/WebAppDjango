@@ -156,8 +156,11 @@ class UpdateItemWarehouse(APIView):  # Изменено название
 
 
 def action_log(request):
-    # Получаем все записи истории, связанные с компанией пользователя
-    history_records = ItemHistory.objects.filter(company=request.user.company).order_by('-changed_at')
-    
-    # Передаем данные в шаблон
-    return render(request, 'StoreHouse/action_log.html', {'history_records': history_records})
+    if request.user.is_authenticated:
+        # Получаем все записи истории, связанные с компанией пользователя
+        history_records = ItemHistory.objects.filter(company=request.user.company).order_by('-changed_at')
+        
+        # Передаем данные в шаблон
+        return render(request, 'StoreHouse/action_log.html', {'history_records': history_records, 'name': request.user.name, 'surname': request.user.surname})
+    else:
+        return redirect('AuthReg:authorisation')
