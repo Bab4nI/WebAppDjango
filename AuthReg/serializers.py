@@ -28,9 +28,10 @@ class UserLoginSerializer(serializers.Serializer):
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):      # Это для сохранения данных об юзере
+    company = serializers.CharField(source='company.name')  # Вернуть название компании
     class Meta:
         model = User
-        fields = ['id', 'surname', 'name', 'patronymic', 'email', 'is_admin', 'is_employee', 'company']
+        fields = ['id', 'surname', 'name', 'patronymic', 'email', 'is_company_admin', 'company']
 
 class CompanyDetailsSerializer(serializers.ModelSerializer):
     admin_surname = serializers.SerializerMethodField()
