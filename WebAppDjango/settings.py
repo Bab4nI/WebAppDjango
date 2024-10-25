@@ -11,8 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
-from django.urls import reverse_lazy
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +26,7 @@ SECRET_KEY = 'django-insecure-tbj9qzsn!3_lolp3s05vgtv*sq8ia&5s_gmof@d3h5bnt24dpp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.131.56.227', '192.168.0.101']
+ALLOWED_HOSTS = ['192.168.0.100', '127.0.0.1']
 
 
 # Application definition
@@ -129,7 +128,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
+USE_TZ = True
 
 USE_I18N = True
 
@@ -166,3 +166,12 @@ EMAIL_USE_SSL = False
 
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+LOGOUT_REDIRECT_URL = '/'
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+

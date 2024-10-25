@@ -1,12 +1,11 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
     <title>Система инвентаризации</title>
 </head>
@@ -20,12 +19,13 @@
                     <a class="nav_link" href="{% url 'index' %}">О нас</a>
                     <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
                     <a class="nav_link" href="{% url 'StoreHouse:inventory' %}">Инвентарь</a>
+                    <a class="nav_link" href="{% url 'StoreHouse:action_log' %}">Журнал действий</a>
                     <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
                 </nav>
             </div>
         </div>
     </header>
-`
+
     <div class="intro">
         <div class="container">
             <div class="colomn_grid">
@@ -33,14 +33,14 @@
                     <p>Если в Вашей компании существуют трудности в проведении инвентаризации или Вы ищите более удобный сервис для этих целей, то наш сайт точно для вас.</p>
                     <p>Нажмите кнопку ниже, чтобы зарегистрироваться и начать пользоваться нашим сервисом.</p>
     
-                    <a class="button_link" href="{% url 'AuthReg:authorisation' %}">
+                    <a class="button_link" href="{% url 'AuthReg:account' %}">
                         <button class="button">Начать сейчас</button>
                     </a>
                     
                     <p class="intro_down_text">Для получения дополнительной информации, прокрутите страницу вниз.</p>  
                 </div>
                 <div class="intro_image img">
-                    <img src="{%  static 'images/checklist_3318615.png' %}" alt="checklist_image">
+                    <img src="{% static 'images/checklist_3318615.png' %}" alt="checklist_image">
                 </div>
             </div>
         </div>
@@ -56,50 +56,42 @@
         </div>
         <div class="row_grid">
             <div class="abilities_box">
-                <div class="abilities_num">
-                    1
-                </div>
+                <div class="abilities_num">1</div>
                 <div class="abilities_text">
-                    <p>В онлайн формате заполнить таблицу с инвентарём вашей компании. При этом под каждый товар сгенерируется уникальный  QR код, при сканировании которого вы можете получить или изменить информацию об инвентаре в нашем приложении. А также вы можете добавлять новые заголовки в таблицу, если это необходимо.</p>
+                    <p>В онлайн формате заполнить таблицу с инвентарём вашей компании. При этом под каждый товар сгенерируется уникальный QR код, при сканировании которого вы можете получить или изменить информацию об инвентаре в нашем приложении. А также вы можете добавлять новые заголовки в таблицу, если это необходимо.</p>
                 </div>
             </div>
             <div class="abilities_box">
-                <div class="abilities_num">
-                    2
-                </div>
+                <div class="abilities_num">2</div>
                 <div class="abilities_text">
-                    <p>Для более наглядного представления о расположении товаров воспользоваться нашей картой помещений. С помощью удобного интерфейса вы можете нарисовать помещение любой формы, а также  составить отдельные карты для каждого этажа.</p>
+                    <p>Для более наглядного представления о расположении товаров воспользоваться нашей картой помещений. С помощью удобного интерфейса вы можете нарисовать помещение любой формы, а также составить отдельные карты для каждого этажа.</p>
                 </div>
             </div>
             <div class="abilities_box">
-                <div class="abilities_num">
-                    3
-                </div>
+                <div class="abilities_num">3</div>
                 <div class="abilities_text">
-                    <p>Зарегистрировать своих сотрудников на нашей платформе в быстром и удобном формате, а при необходимости отслеживать  их действия через журнал действий. Это поможет отслеживать в какое время и какой сотрудник переносил данный товар и куда он его переносил.</p>
+                    <p>Зарегистрировать своих сотрудников на нашей платформе в быстром и удобном формате, а при необходимости отслеживать их действия через журнал действий. Это поможет отслеживать в какое время и какой сотрудник переносил данный товар и куда он его переносил.</p>
                 </div>
             </div>
         </div>
     </div>
 
-
     <br><br><br>
-    
     
     <div class="container">
         <div class="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="{% static 'images/dbh1.jpg' %}" alt="image 1">
+                    <img src="{% static 'images/dbh1.png' %}" alt="image 1">
                 </div>
                 <div class="carousel-item">
-                    <img src="{% static 'images/dbh2.jpg' %}" alt="image 2">
+                    <img src="{% static 'images/dbh2.png' %}" alt="image 2">
                 </div>
                 <div class="carousel-item">
-                    <img src="{% static 'images/dbh3.jpg' %}" alt="image 3">
+                    <img src="{% static 'images/dbh3.png' %}" alt="image 3">
                 </div>
                 <div class="carousel-item">
-                    <img src="{% static 'images/dbh4.jpg' %}" alt="image 4">
+                    <img src="{% static 'images/dbh4.png' %}" alt="image 4">
                 </div>
             </div>
         
@@ -117,13 +109,10 @@
     
     <script src="{% static 'js/script.js' %}"></script>
     
-    
     <br><br>
-
 
     <div class="container">
         <div class="colomn_grid">
-
             <div class="review_block">
                 <div class="review_header">
                     <div class="review_image"> 
@@ -134,7 +123,7 @@
                     </div>
                 </div>
                 <div class="review_footer">
-                    <p> 12 студентов из 10, держите свой миллион за студенческий стартап. заберите в и-223 </p>
+                    <p>12 студентов из 10, держите свой миллион за студенческий стартап. Заберите в и-223.</p>
                 </div>
             </div>
 
@@ -148,7 +137,7 @@
                     </div>
                 </div>
                 <div class="review_footer">
-                    <p> Система инвентаризации — просто находка! <br>Всё чётко, ясно, нет ни малейшей плутовки. <br>В учёте полный порядок и ноль суеты, <br>Теперь всё под контролем, как и должно быть!</p>
+                    <p>Система инвентаризации — просто находка! <br> Всё чётко, ясно, нет ни малейшей плутовки. <br> В учёте полный порядок и ноль суеты, <br> Теперь всё под контролем, как и должно быть!</p>
                 </div>
             </div>
 
@@ -162,7 +151,7 @@
                     </div>
                 </div>
                 <div class="review_footer">
-                    <p> вы обязательно защитите проект </p>
+                    <p>Вы обязательно защитите проект.</p>
                 </div>
             </div>
         </div>
@@ -171,12 +160,11 @@
     <div class="container">
         <div class="colomn_grid">
             <div class="app_text">
-                <p>Также у нас есть приложение, с помощью которого вы сможете фиксировать перемещение инвентаря между помещениями или складами. Оно поможет быстро провести  в вашей компании инвентаризацию, а также автоматически составит отчёт о проведённой работе.</p>
+                <p>Также у нас есть приложение, с помощью которого вы сможете фиксировать перемещение инвентаря между помещениями или складами. Оно поможет быстро провести в вашей компании инвентаризацию, а также автоматически составит отчёт о проведённой работе.</p>
             </div> 
             <div class="app_image">
                 <img src="{% static 'images/НовыйХолст1.png' %}" alt="">
             </div>
-            
         </div>
         <a class="app_link" href="{% url 'app_link' %}">Ссылка на приложение</a>
     </div>

@@ -1,13 +1,12 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style4.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
     <title>Личный кабинет</title>
 </head>
 <body>
@@ -15,17 +14,19 @@
         <header class="header">
             <div class="container">
                 <div class="header_inner">
+
                     <div class="header_box">
                         <div class="header_acc_photo">
                             <img src="{% static 'images/profile_pic.png' %}" alt="user_img">    
                         </div>
-                        <p>{{ user.name }} {{ user.surname }}</p> <!-- Выводим имя и фамилию пользователя -->
+                        <p>{{ surname }} {{ name }}</p>
                     </div>
                     
                     <nav class="nav">
                         <a class="nav_link" href="{% url 'index' %}">О нас</a>
                         <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
                         <a class="nav_link" href="{% url 'StoreHouse:inventory' %}">Инвентарь</a>
+                        <a class="nav_link" href="{% url 'StoreHouse:action_log' %}">Журнал действий</a>
                         <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
                     </nav>
                 </div>
@@ -36,9 +37,8 @@
     <div class="dropdown">
         <button class="dropbtn">Опции</button>
         <div class="dropdown-content">
-            <a href="#" id="addRecord">Добавить запись</a>
-            <a href="#" id="deleteRecord">Удалить запись</a>
-            <a href="#" id="addHeader">Добавить заголовок</a>
+            <a href="{% url 'StoreHouse:create_item' selected_warehouse.id %}">Добавить предмет</a>
+            <a href="{% url 'StoreHouse:create_warehouse' selected_warehouse.id %}">Создать склад</a>      
         </div>
     </div>
 
@@ -50,77 +50,92 @@
         </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>№</th>
-                <th>QR-код</th>
-                <th>Наименование товара</th>
-                <th>Местонахождение</th>
-                <th>Ответственное лицо</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="dropdown">
+        <button class="dropbtn">{{ selected_warehouse }} </button>
+        <div class="dropdown-content">
             {% for warehouse in warehouses %}
-                <tr>
-                    <td>{{ forloop.counter }}</td> <!-- Номер склада -->
-                    <td>Содержимое:</td>
-                    <td>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Предмет</th>
-                                    <th>Описание</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in warehouse.items.all %}
-                                    <tr>
-                                        <td>{{ item.name }}</td>
-                                        <td>{{ item.description }}</td>
-                                    </tr>
-                                {% empty %}
-                                    <tr>
-                                        <td colspan="2">Нет предметов на этом складе</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </td>
-                    <td>
-                        {% if warehouse.sub_warehouses.exists %} <!-- Убедитесь, что имя отношения правильно -->
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Подсклады</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for sub_warehouse in warehouse.sub_warehouses.all %}
-                                        <tr>
-                                            <td>{{ sub_warehouse.name }}</td>
-                                        </tr>
-                                    {% empty %}
-                                        <tr>
-                                            <td>Нет подскладов</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% else %}
-                            <p>Нет подскладов</p> <!-- Если нет подскладов -->
-                        {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="5">Нет складов</td> <!-- Количество столбцов должно совпадать -->
-                </tr>
+                {% if warehouse.id != selected_warehouse.id %}
+                    <a href="{% url 'StoreHouse:inventory_by_warehouse' warehouse.id %}">
+                        {{ warehouse.name }}
+                    </a>
+                {% endif %}
             {% endfor %}
+        </div>
+    </div>
+
+    <table>
+        
+        <tbody id="tableBody">
+            {% for warehouse in sub_warehouses %}
+            <thead>
+                <tr>
+                    <th>Склад
+                        <div class="dropdown">
+                            <button class="dropbtn">{{ warehouse.name }}</button>
+                            <div class="dropdown-content">
+                                <a href="{% url 'StoreHouse:edit_warehouse' selected_warehouse.id warehouse.id %}">Редактировать</a>
+                                <button class="WarehouseDeleteRecord" data-warehouse-id="{{ warehouse.id }}">Удалить</button>      
+                            </div>
+                        </div>
+                    </th>
+                    <th>Наименование товара</th>
+                    <th>Местонахождение</th>
+                    <th>Ответственное лицо</th>
+                    <th>Опции</th>
+                </tr>
+            </thead>
+                {% for item in warehouse.items.all %} 
+                    <tr>
+                        <td>
+                            {{ item.serial_number }} <br>
+                            <button class="qr-btn" data-qrcode="{{ item.qr_code.url }}">Показать QR</button>
+                        </td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.warehouse.name }}</td>
+                        <td>{{ item.responsible_employee }}</td>
+                        <td>
+                            <a href="{% url 'StoreHouse:edit_item' selected_warehouse.id item.id %}">Изменить</a>
+                            <button class="deleteRecord" data-item-id="{{ item.id }}">Удалить</button>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">Нет предметов.</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %} 
         </tbody>
     </table>
 
+    
+    <div id="qrPopup" class="qr-popup" style="display:none;">
+        <img id="qrCode" src="" alt="QR-код">
+        <button id="closeQrPopup">Закрыть</button>
+    </div>
+
+    <!-- Всплывающее окно для удаления предмета -->
+    <div id="deleteConfirmation" class="popup" style="display:none;">
+        <div class="popup-content">
+            {% csrf_token %}
+            <p>Вы уверены, что хотите удалить этот элемент?</p>
+            <button id="confirmDeleteItemButton">Да</button>
+            <button id="cancelDeleteItemButton">Нет</button>
+        </div>
+    </div>
+
+    
+    <!-- Всплывающее окно для удаления склада -->
+    <div id="WarehouseDeleteConfirmation" class="popup" style="display:none;">
+        <div class="popup-content">
+            {% csrf_token %}
+            <p>Вы уверены, что хотите удалить этот склад?</p>
+            <button id="confirmDeleteWarehouseButton">Да</button>
+            <button id="cancelDeleteWarehouseButton">Нет</button>
+        </div>
+    </div>
+
+
     <script src="{% static 'js/script4.js' %}"></script>
-    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script src="{% static 'js/script5.js' %}"></script>
 </body>
 </html>

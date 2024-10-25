@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style4.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <title>Личный кабинет</title>
+</head>
+<body>
+    <div class="header_base">
+        <header class="header">
+            <div class="container">
+                <div class="header_inner">
+
+                    <div class="header_box">
+                        <div class="header_acc_photo">
+                            <img src="{% static 'images/profile_pic.png' %}" alt="user_img">    
+                        </div>
+                        <p>{{ surname }} {{ name }}</p>
+                    </div>
+                    
+                    <nav class="nav">
+                        <a class="nav_link" href="{% url 'index' %}">О нас</a>
+                        <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
+                        <a class="nav_link" href="{% url 'StoreHouse:inventory' %}">Инвентарь</a>
+                        <a class="nav_link" href="{% url 'StoreHouse:action_log' %}">Журнал действий</a>
+                        <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <div id="activity" class="content-section">
+        <h2>Журнал действий</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Операция</th>
+                    <th>Наименование товара</th>
+                    <th>Местонахождение</th>
+                    <th>Дата</th>
+                    <th>Время</th>
+                    <th>Ответственное лицо</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                {% for history in history_records %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ history.action_type }}</td>
+                        <td>{{ history.item_name }}</td>
+                        <td>{{ history.warehouse_name }}</td>
+                        <td>{{ history.changed_at|date:"d.m.Y" }}</td>
+                        <td>{{ history.changed_at|time:"H:i:s" }}</td>
+                        <td>{{ history.responsible_employee_surname }} {{ history.responsible_employee_name }} {{ history.responsible_employee_email }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6">Журнал чист.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>

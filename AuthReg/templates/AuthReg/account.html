@@ -1,7 +1,7 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style3.css' %}">
@@ -19,13 +19,14 @@
                         <div class="header_acc_photo">
                             <img src="{% static 'images/profile_pic.png' %}" alt="user_img">    
                         </div>
-                        <p>user_name</p>
+                        <p>{{ surname }} {{ name }}</p>
                     </div>
                     
                     <nav class="nav">
                         <a class="nav_link" href="{% url 'index' %}">О нас</a>
                         <a class="nav_link" href="{% url 'AuthReg:account' %}">Личный кабинет</a>
                         <a class="nav_link" href="{% url 'StoreHouse:inventory' %}">Инвентарь</a>
+                        <a class="nav_link" href="{% url 'StoreHouse:action_log' %}">Журнал действий</a>
                         <a class="nav_link" href="{% url 'support' %}">Связь с поддержкой</a>
                     </nav>
                 </div>
@@ -38,7 +39,7 @@
             <ul>
                 <li onclick="showContent('about')">О себе</li>
                 <li onclick="showContent('company')">Данные компании</li>
-                <li onclick="showContent('activity')">Журнал действий</li>
+                <li onclick="showContent('request')">Заявка на проведение инвентаризации</li>
             </ul>
         </aside>
 
@@ -79,44 +80,73 @@
                         <div class="form-group">
                             <label for="role">Роль:</label>
                             <input type="text" id="role" name="role" value="{{ role }}" readonly>
+                            
                         </div>
                     </div>
                 </div> 
-                <br><br><br><br><br><br><br>
+
+                <form id="logoutForm" method="post" action="{% url 'AuthReg:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" id="submitBtn">Выйти из аккаунта</button>
+                </form>
+
             </div>
 
             <div id="company" class="content-section">
                 <h2>Название компании</h2>
                 <div class="form-group">
-                    <input type="text" id="company_name" name="company_name" value="{{ company.name }}" readonly>
+                    <input type="text" id="company_name" name="company_name" value="{{ company }}" readonly>
                 </div>
 
                 <h2>Зарегистрированные сотрудники</h2>
                 <ul>
                     {% for employee in employees %}
-                    <li>{{ employee.surname }} {{ employee.name }} {{ employee.middlename }} {{ employee.role }}</li>
+                    <li>{{ employee.surname }} {{ employee.name }} {{ employee.email }} </li>
                     {% empty %}
                     <li>No employees found</li>
                     {% endfor %}
                 </ul>
-                <a href="{% url 'AuthReg:create_invitation' %}">Добавить сотрудника</a>
-                
-                <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-            </div>
 
-            <div id="activity" class="content-section">
-                <h2>Журнал действий</h2>
-                <!-- Журнал действий -->
+                <h2>Склады</h2>
+                <ul> 
+                    {% for warehouse in warehouses %}
+                    <li>{{ warehouse.name }}</li>
+                    {% empty %}
+                    <li>Складов нет.</li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'AuthReg:invite' %}">Добавить сотрудника</a>
+                
+            </div>
+            
+            <div id="request" class="content-section">
+                <h2>Создать заявку</h2>
+                <br>
+                <label for="employeesSelect">Выберите сотрудника, которому хотите назначить заявку:</label>
+                {{ form.employee }}
+                <select id="employeesSelect">
+                    {% for employee in employees %}
+                        <option value="{{ employee.name }}">{{ employee.name }}</option>
+                    {% endfor %} 
+                </select>
+                <br><br>
+                <label for="warehouseSelect">Выберите кабинет/отдел, в котором необходимо провести инвентаризацию:</label>
+                <select id="warehouseSelect">
+                    {% for warehouse in warehouses %}
+                        <option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
+                    {% endfor %}
+                </select> <!-- можно тупо сделать варианты в виде "склад1 подсклад1", "склад1 подсклад2", "склад1 подсклад3" и тд. чтобы не было двойных выборов: сначала склад, затем уже в нем подсклад--> 
+                <br><br>
+                <label for="timeSelect">Напишите срок загрузки отчёта:</label>
+                {{ form.deadline }}
+                <input type="datetime-local" id="deadline" name="deadline">
+                <br><br>
+                <button id="submitRequest">Назначить инвентаризацию</button>
             </div>
         </section>
     </div>
 
-    <div class="contacts_line">
-        <div class="contacts_block">
-            <p>craftcode@sfedu.ru</p>
-            <p>+7-(9**)-***-**-**</p>
-        </div>
-    </div>
+    
 
     <script src="{% static 'js/script3.js' %}"> </script>
 </body>
