@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import *
+from InventoryRequests.forms import InventoryRequestForm
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login as auth_login, get_user_model
 from .models import Invitation
@@ -18,7 +19,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserDetailsSerializer
-
+from InventoryRequests.views import InventoryRequestView
 def index(request):
     return render(request, 'mainTempaltes/index.html')
 
@@ -114,13 +115,25 @@ def authorisation(request):
     return render(request, 'AuthReg/authorisation.html', {'form': form})
 
 def account(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated: 
+        if request.method == 'POST':
+            form = InventoryRequestForm(request.POST)
+
+            if form.is_valid():
+                inventory_request = form.save(commit=False)  # Создает объект без сохранения в БД
+                inventory_request.employee = request.user  # Связываем с текущим пользователем
+                inventory_request.save()  # Сохраняем в базе данных
+
+                # Перенаправление на страницу account после успешного сохранения
+                return redirect('AuthReg:account')  # Убедитесь, что вы перенаправляете на правильный URL
+        else:
+            form = InventoryRequestForm()  # Создаем экземпляр формы
+
+        # Обработка GET-запроса
         user = request.user
         company = user.company
-        if user.is_company_admin:
-            role = 'admin'
-        else:
-            role = 'employee'
+        role = 'admin' if user.is_company_admin else 'employee'
+
         User_context = {
             'surname': user.surname,
             'name': user.name,
@@ -146,12 +159,16 @@ def account(request):
                 'warehouses': [],
                 'items': [],
             }
-            
-        context = {**User_context, **Inventory_context}
+
+        # Корректно объединяем контексты
+        context = {**User_context, **Inventory_context, 'form': form}
         return render(request, 'AuthReg/account.html', context)
 
     else:
         return redirect('AuthReg:authorisation')
+
+
+
      
 def inventory (request):
     return render(request, 'AuthReg/inventar')

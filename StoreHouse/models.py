@@ -172,5 +172,5 @@ class ItemHistory(models.Model):
     action_type = models.CharField(max_length=10, choices=ACTION_CHOICES, default='updated')
 
     def __str__(self):
-        return f"{self.get_action_type_display()} — {self.item} ({self.changed_at})"
+        return f"{self.get_action_type_display()} — {self.item_name} ({self.changed_at})"
     
