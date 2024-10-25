@@ -4,13 +4,19 @@ from StoreHouse.models import Item
 from AuthReg.models import User
 
 class ItemSerializer(serializers.ModelSerializer):
+    qr_code_url = serializers.SerializerMethodField()
     company = serializers.CharField(source='company.name')  # Вернуть название компании
     warehouse = serializers.CharField(source='warehouse.name')  # Вернуть название склада
 
     class Meta:
         model = Item
         fields = ['id', 'name', 'description', 'serial_number', 'company', 'warehouse']
-# serializers.py
+
+    def get_qr_code_url(self, obj):
+        request = self.context.get('request')
+        if obj.qr_code:
+            return request.build_absolute_uri(obj.qr_code.url)
+        return None
 
 class WarehouseSerializer(serializers.ModelSerializer):
     class Meta:
