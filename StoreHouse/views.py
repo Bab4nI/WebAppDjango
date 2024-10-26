@@ -12,16 +12,25 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db.models import Q, query
 from .serializers import EmployeeSerializer  # Подставь свои сериализаторы
-
-
-
-class SearchAPIView(APIView):
-
-    def get(self, request, *args, **kwargs):
-        query = request.query_params.get('q', None)
 from .models import Item, ItemHistory
 from .serializers import ItemSerializer, ItemUpdateSerializer
 from django.http import JsonResponse
+
+
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+class StockSearchView(APIView):
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('q', '')
+        if query:
+            items = Item.objects.filter(name__icontains=query)  # Проверка на наличие совпадений
+            employees = User.objects.filter(name__icontains=query)  # Проверка на совпадение по сотрудникам
+            # Далее возвращаем найденные результаты
+            return Response({'items': ItemSerializer(items, many=True).data,
+                             'employees': EmployeeSerializer(employees, many=True).data})
+        return Response([], status=status.HTTP_200_OK)
+
 
 def edit_item(request, warehouse_id, item_id):
     item = get_object_or_404(Item, id=item_id)

@@ -178,8 +178,6 @@ class UserLoginAPI(APIView):
 
 
 class CompanyDetailsAPI(APIView):
-    permission_classes = [IsAuthenticated]
-
     def get(self, request):
         user = request.user
         company = user.company

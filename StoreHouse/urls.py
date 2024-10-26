@@ -1,13 +1,13 @@
 from django.urls import path
 
 from . import views
-from .views import UpdateItemWarehouse, WarehouseListView, SearchAPIView
+from .views import UpdateItemWarehouse, WarehouseListView, StockSearchView
 
 app_name = "StoreHouse"
 
 urlpatterns = [
     path('create_warehouse/', views.create_warehouse, name='create_warehouse'),
-    path('search/', SearchAPIView.as_view(), name='search-api'),
+    path('search/', StockSearchView.as_view(), name='search-api'),
     path('create_item', views.create_item, name = 'create_item'),
     path('warehouse/<int:warehouse_id>/create', views.create_warehouse, name='create_warehouse'),
     path('warehouse/<int:warehouse_id>/delete/', views.delete_warehouse, name='delete_warehouse'),

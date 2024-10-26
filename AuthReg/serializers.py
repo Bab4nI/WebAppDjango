@@ -27,11 +27,20 @@ class UserLoginSerializer(serializers.Serializer):
 
 
 
-class UserDetailsSerializer(serializers.ModelSerializer):      # Это для сохранения данных об юзере
-    company = serializers.CharField(source='company.name')  # Вернуть название компании
+from rest_framework import serializers
+from AuthReg.models import User
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    company = serializers.SerializerMethodField(source="company.name")
+
     class Meta:
         model = User
-        fields = ['id', 'surname', 'name', 'patronymic', 'email', 'is_company_admin', 'company']
+        fields = ['id', 'name', 'surname', 'patronymic', 'email', 'company']
+
+    def get_company(self, obj):
+        # Проверяем, есть ли у пользователя компания
+        return obj.company.name if obj.company else None
+
 
 class CompanyDetailsSerializer(serializers.ModelSerializer):
     admin_surname = serializers.SerializerMethodField()
