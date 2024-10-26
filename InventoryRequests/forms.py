@@ -4,7 +4,7 @@ from .models import InventoryRequest
 class InventoryRequestForm(forms.ModelForm):
     class Meta:
         model = InventoryRequest
-        fields = ['employee', 'warehouse', 'deadline', 'status']  # Use 'warehouses' here
+        fields = ['employee', 'warehouses', 'deadline', 'status']  # Use 'warehouses' here
         widgets = {
             'deadline': forms.DateInput(attrs={'type': 'date', 'placeholder': 'YYYY-MM-DD'})  # Шаблон даты
         }

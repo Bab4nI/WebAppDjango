@@ -19,7 +19,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserDetailsSerializer
-from InventoryRequests.views import InventoryRequestView
+#from InventoryRequests.views import InventoryRequestView
 def index(request):
     return render(request, 'mainTempaltes/index.html')
 
